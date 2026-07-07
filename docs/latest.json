@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-07T23:58:34+09:00",
+  "checked_at": "2026-07-08T00:02:58+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": true,
       "status_code": 200,
-      "elapsed_sec": 2.325,
+      "elapsed_sec": 2.458,
       "state": "OK",
       "error_type": null,
       "error": null
