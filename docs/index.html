@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JAIRO Cloud Status</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8fb;
+        --panel: #ffffff;
+        --text: #20242c;
+        --muted: #626c7a;
+        --line: #d9dee8;
+        --ok: #16845b;
+        --slow: #9a6a00;
+        --very-slow: #b64f0a;
+        --error: #be2f36;
+        --unknown: #646b75;
+        --shadow: 0 8px 22px rgba(32, 36, 44, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      main {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 42px;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.45rem;
+        font-weight: 700;
+      }
+
+      .checked-at {
+        color: var(--muted);
+        font-size: 0.92rem;
+        white-space: nowrap;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+        margin-bottom: 18px;
+        padding: 18px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-left: 6px solid var(--unknown);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .summary[data-level="OK"] {
+        border-left-color: var(--ok);
+      }
+
+      .summary[data-level="SLOW"] {
+        border-left-color: var(--slow);
+      }
+
+      .summary[data-level="VERY_SLOW"] {
+        border-left-color: var(--very-slow);
+      }
+
+      .summary[data-level="SERVER_ERROR"],
+      .summary[data-level="TIMEOUT"] {
+        border-left-color: var(--error);
+      }
+
+      .summary-message {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 650;
+      }
+
+      .counts {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(68px, 1fr));
+        gap: 8px;
+      }
+
+      .count {
+        min-width: 68px;
+        padding: 8px 10px;
+        background: #f3f5f8;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        text-align: center;
+      }
+
+      .count span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 700;
+      }
+
+      .count strong {
+        display: block;
+        margin-top: 2px;
+        font-size: 1.1rem;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      table {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--muted);
+        background: #f3f5f8;
+        font-size: 0.78rem;
+        font-weight: 750;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      a {
+        color: #1a5fb4;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        min-width: 92px;
+        justify-content: center;
+        padding: 4px 8px;
+        border-radius: 999px;
+        color: #fff;
+        font-size: 0.76rem;
+        font-weight: 800;
+      }
+
+      .badge.OK {
+        background: var(--ok);
+      }
+
+      .badge.SLOW {
+        background: var(--slow);
+      }
+
+      .badge.VERY_SLOW {
+        background: var(--very-slow);
+      }
+
+      .badge.SERVER_ERROR,
+      .badge.TIMEOUT {
+        background: var(--error);
+      }
+
+      .badge.UNKNOWN {
+        background: var(--unknown);
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .empty {
+        padding: 24px;
+        color: var(--muted);
+      }
+
+      @media (max-width: 800px) {
+        header,
+        .summary {
+          align-items: stretch;
+          grid-template-columns: 1fr;
+        }
+
+        header {
+          flex-direction: column;
+        }
+
+        .checked-at {
+          white-space: normal;
+        }
+
+        .counts {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>JAIRO Cloud Status</h1>
+        <div class="checked-at" id="checkedAt">Loading latest status</div>
+      </header>
+
+      <section class="summary" id="summary" data-level="UNKNOWN">
+        <p class="summary-message" id="summaryMessage">最新状態を読み込んでいます。</p>
+        <div class="counts" id="counts"></div>
+      </section>
+
+      <section class="table-wrap" aria-label="site status">
+        <table>
+          <thead>
+            <tr>
+              <th>Site</th>
+              <th>URL</th>
+              <th>HTTP</th>
+              <th>Response</th>
+              <th>State</th>
+              <th>Error</th>
+            </tr>
+          </thead>
+          <tbody id="results">
+            <tr><td colspan="6" class="empty">読み込み中です。</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <script>
+      const states = ["OK", "SLOW", "VERY_SLOW", "SERVER_ERROR", "TIMEOUT", "UNKNOWN"];
+      const countsEl = document.querySelector("#counts");
+      const checkedAtEl = document.querySelector("#checkedAt");
+      const summaryEl = document.querySelector("#summary");
+      const summaryMessageEl = document.querySelector("#summaryMessage");
+      const resultsEl = document.querySelector("#results");
+
+      function text(value, fallback = "-") {
+        return value === null || value === undefined || value === "" ? fallback : String(value);
+      }
+
+      function renderCounts(counts = {}) {
+        countsEl.innerHTML = states.map((state) => `
+          <div class="count">
+            <span>${state}</span>
+            <strong>${Number(counts[state] || 0)}</strong>
+          </div>
+        `).join("");
+      }
+
+      function renderError(message) {
+        checkedAtEl.textContent = "Latest status unavailable";
+        summaryEl.dataset.level = "UNKNOWN";
+        summaryMessageEl.textContent = message;
+        renderCounts({});
+        resultsEl.innerHTML = `<tr><td colspan="6" class="empty">${message}</td></tr>`;
+      }
+
+      function renderLatest(latest) {
+        const summary = latest.summary || {};
+        const results = Array.isArray(latest.results) ? latest.results : [];
+        const checkedAt = latest.checked_at ? new Date(latest.checked_at).toLocaleString("ja-JP") : "-";
+
+        checkedAtEl.textContent = `Last checked: ${checkedAt}`;
+        summaryEl.dataset.level = summary.level || "UNKNOWN";
+        summaryMessageEl.textContent = summary.message || "状態メッセージがありません。";
+        renderCounts(summary.counts || {});
+
+        if (results.length === 0) {
+          resultsEl.innerHTML = '<tr><td colspan="6" class="empty">監視対象がありません。</td></tr>';
+          return;
+        }
+
+        resultsEl.innerHTML = results.map((result) => {
+          const state = text(result.state, "UNKNOWN");
+          const elapsed = result.elapsed_sec === null || result.elapsed_sec === undefined
+            ? "-"
+            : `${Number(result.elapsed_sec).toFixed(3)} sec`;
+          const primary = result.primary ? " <span class=\"muted\">primary</span>" : "";
+          return `
+            <tr>
+              <td><strong>${text(result.name)}</strong>${primary}</td>
+              <td><a href="${text(result.url, "#")}" target="_blank" rel="noopener noreferrer">${text(result.url)}</a></td>
+              <td>${text(result.status_code)}</td>
+              <td>${elapsed}</td>
+              <td><span class="badge ${state}">${state}</span></td>
+              <td>${text(result.error)}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      fetch("latest.json", { cache: "no-store" })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`latest.json returned ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(renderLatest)
+        .catch(() => renderError("latest.json を読み込めませんでした。"));
+    </script>
+  </body>
+</html>

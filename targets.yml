@@ -1,0 +1,4 @@
+targets:
+  - name: JIRCAS
+    url: https://jircas.repo.nii.ac.jp/
+    primary: true
