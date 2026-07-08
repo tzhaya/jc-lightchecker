@@ -392,7 +392,7 @@
 
         .range-controls {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(5, minmax(0, 1fr));
         }
 
         .range-button {
@@ -426,7 +426,8 @@
         <div class="panel-head">
           <h2>Response Trend</h2>
           <div class="range-controls" id="rangeControls" aria-label="history range">
-            <button class="range-button" type="button" data-range="24h" aria-pressed="true">24h</button>
+            <button class="range-button" type="button" data-range="12h" aria-pressed="true">12h</button>
+            <button class="range-button" type="button" data-range="24h" aria-pressed="false">24h</button>
             <button class="range-button" type="button" data-range="7d" aria-pressed="false">7d</button>
             <button class="range-button" type="button" data-range="30d" aria-pressed="false">30d</button>
             <button class="range-button" type="button" data-range="all" aria-pressed="false">all</button>
@@ -476,6 +477,7 @@
       const historyStatsEl = document.querySelector("#historyStats");
       const rangeControlsEl = document.querySelector("#rangeControls");
       const ranges = {
+        "12h": 12 * 60 * 60 * 1000,
         "24h": 24 * 60 * 60 * 1000,
         "7d": 7 * 24 * 60 * 60 * 1000,
         "30d": 30 * 24 * 60 * 60 * 1000,
@@ -483,7 +485,7 @@
       };
       const seriesColors = ["#1a5fb4", "#16845b", "#b64f0a", "#7b3f98", "#007d8a", "#b04566"];
       let historyRecords = [];
-      let activeRange = "24h";
+      let activeRange = "12h";
 
       function text(value, fallback = "-") {
         return value === null || value === undefined || value === "" ? fallback : String(value);
