@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-13T09:38:06+09:00",
+  "checked_at": "2026-07-13T09:53:07+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -10,8 +10,8 @@
     "message": "複数サイトで応答遅延または異常を確認しました。広域的遅延の可能性があります。",
     "counts": {
       "OK": 1,
-      "SLOW": 1,
-      "VERY_SLOW": 1,
+      "SLOW": 2,
+      "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
       "UNKNOWN": 0
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 6.798,
+      "elapsed_sec": 10.683,
       "state": "SLOW",
       "error_type": null,
       "error": null
@@ -35,8 +35,8 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 3.726,
-      "state": "OK",
+      "elapsed_sec": 9.559,
+      "state": "SLOW",
       "error_type": null,
       "error": null
     },
@@ -45,8 +45,8 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 15.549,
-      "state": "VERY_SLOW",
+      "elapsed_sec": 4.477,
+      "state": "OK",
       "error_type": null,
       "error": null
     }
