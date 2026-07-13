@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-13T12:08:06+09:00",
+  "checked_at": "2026-07-13T12:23:06+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -10,11 +10,11 @@
     "message": "複数サイトで応答遅延または異常を確認しました。広域的遅延の可能性があります。",
     "counts": {
       "OK": 0,
-      "SLOW": 2,
+      "SLOW": 3,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
-      "UNKNOWN": 1
+      "UNKNOWN": 0
     },
     "total": 3,
     "primary_state": null
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 7.32,
+      "elapsed_sec": 6.758,
       "state": "SLOW",
       "error_type": null,
       "error": null
@@ -34,18 +34,18 @@
       "name": "農研機構機関リポジトリ",
       "url": "https://repository.naro.go.jp/",
       "primary": false,
-      "status_code": null,
-      "elapsed_sec": 10.015,
-      "state": "UNKNOWN",
-      "error_type": "connection_error",
-      "error": "[Errno -3] Temporary failure in name resolution"
+      "status_code": 200,
+      "elapsed_sec": 5.02,
+      "state": "SLOW",
+      "error_type": null,
+      "error": null
     },
     {
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 6.461,
+      "elapsed_sec": 5.144,
       "state": "SLOW",
       "error_type": null,
       "error": null
