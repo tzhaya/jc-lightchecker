@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-13T19:53:07+09:00",
+  "checked_at": "2026-07-13T20:08:08+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.145,
+      "elapsed_sec": 1.675,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.409,
+      "elapsed_sec": 1.077,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.779,
+      "elapsed_sec": 1.119,
       "state": "OK",
       "error_type": null,
       "error": null
