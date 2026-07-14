@@ -52,10 +52,14 @@ test("only accepts HTTPS links", () => {
 test("uses external assets with a CSP that forbids inline code", () => {
   const html = readFileSync(join(__dirname, "..", "docs", "index.html"), "utf8");
   const app = readFileSync(join(__dirname, "..", "docs", "app.js"), "utf8");
+  const styles = readFileSync(join(__dirname, "..", "docs", "styles.css"), "utf8");
   assert.match(html, /style-src 'self'/);
   assert.match(html, /script-src 'self'/);
   assert.doesNotMatch(html, /unsafe-inline/);
   assert.doesNotMatch(html, /<style[\s>]/i);
   assert.doesNotMatch(html, /<script(?![^>]*\bsrc=)[^>]*>/i);
   assert.doesNotMatch(app, /\bstyle\s*=/i);
+  assert.match(styles, /Digital Agency Design System inspired service theme/);
+  assert.match(styles, /--primary:\s*#0017c1/);
+  assert.match(styles, /\.recent-errors\s*\{[^}]*border-left:\s*8px solid var\(--error\)/s);
 });
