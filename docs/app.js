@@ -103,11 +103,12 @@ function renderLatest(latest) {
       ? "-"
       : `${Number(result.elapsed_sec).toFixed(3)} sec`;
     const primary = result.primary ? " <span class=\"muted\">primary</span>" : "";
+    const href = RecentErrors.safeHttpsUrl(result.url);
     return `
       <tr>
         <td><strong>${escapeHtml(result.name)}</strong>${primary}</td>
-        <td>${RecentErrors.safeHttpsUrl(result.url)
-          ? `<a href="${escapeAttr(RecentErrors.safeHttpsUrl(result.url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(result.url)}</a>`
+        <td>${href
+          ? `<a href="${escapeAttr(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(result.url)}</a>`
           : escapeHtml(result.url)}</td>
         <td>${escapeHtml(result.status_code)}</td>
         <td>${elapsed}</td>
@@ -261,9 +262,9 @@ function renderHistory() {
     </svg>
   `;
 
-  chartLegendEl.innerHTML = series.map((site) => `
+  chartLegendEl.innerHTML = series.map((site, index) => `
     <span class="legend-item">
-      <span class="legend-swatch" style="background: ${site.color}"></span>
+      <span class="legend-swatch legend-swatch--${index % seriesColors.length}"></span>
       ${escapeHtml(site.name)}
     </span>
   `).join("");
