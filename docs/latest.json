@@ -1,19 +1,19 @@
 {
-  "checked_at": "2026-07-14T13:22:58+09:00",
+  "checked_at": "2026-07-14T13:37:58+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "OK",
-    "message": "大きな異常は確認されていません。",
+    "level": "SLOW",
+    "message": "一部サイトで応答遅延または異常を確認しました。",
     "counts": {
-      "OK": 6,
+      "OK": 5,
       "SLOW": 0,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
-      "TIMEOUT": 0,
+      "TIMEOUT": 1,
       "UNKNOWN": 0
     },
     "total": 6,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.769,
+      "elapsed_sec": 2.095,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.53,
+      "elapsed_sec": 1.225,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 3.096,
+      "elapsed_sec": 1.124,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -55,7 +55,7 @@
       "url": "https://researchmap.jp/tzhaya",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.766,
+      "elapsed_sec": 1.235,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -64,18 +64,18 @@
       "name": "IRDB(参考)",
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 1.659,
-      "state": "OK",
-      "error_type": null,
-      "error": null
+      "status_code": null,
+      "elapsed_sec": 21.242,
+      "state": "TIMEOUT",
+      "error_type": "timeout",
+      "error": "Request timed out after 20 seconds."
     },
     {
       "name": "AgriKnowledge(参考)",
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.637,
+      "elapsed_sec": 0.682,
       "state": "OK",
       "error_type": null,
       "error": null
