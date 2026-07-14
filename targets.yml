@@ -14,3 +14,6 @@ targets:
   - name: IRDB(参考)
     url: https://irdb.nii.ac.jp/
     primary: false
+  - name: AgriKnowledge(参考)
+    url: https://agriknowledge.affrc.go.jp/
+    primary: false
