@@ -1,20 +1,20 @@
 {
-  "checked_at": "2026-07-14T17:07:57+09:00",
+  "checked_at": "2026-07-14T17:22:58+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "SLOW",
-    "message": "一部サイトで応答遅延または異常を確認しました。",
+    "level": "OK",
+    "message": "大きな異常は確認されていません。",
     "counts": {
-      "OK": 4,
+      "OK": 6,
       "SLOW": 0,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
-      "UNKNOWN": 2
+      "UNKNOWN": 0
     },
     "total": 6,
     "primary_state": null
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 3.927,
+      "elapsed_sec": 2.294,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -34,18 +34,18 @@
       "name": "農研機構機関リポジトリ",
       "url": "https://repository.naro.go.jp/",
       "primary": false,
-      "status_code": null,
-      "elapsed_sec": 10.016,
-      "state": "UNKNOWN",
-      "error_type": "connection_error",
-      "error": "[Errno -3] Temporary failure in name resolution"
+      "status_code": 200,
+      "elapsed_sec": 1.101,
+      "state": "OK",
+      "error_type": null,
+      "error": null
     },
     {
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.249,
+      "elapsed_sec": 1.036,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -55,7 +55,7 @@
       "url": "https://researchmap.jp/tzhaya",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.288,
+      "elapsed_sec": 2.494,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -65,7 +65,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.192,
+      "elapsed_sec": 1.341,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -74,11 +74,11 @@
       "name": "AgriKnowledge(参考)",
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
-      "status_code": null,
-      "elapsed_sec": 10.017,
-      "state": "UNKNOWN",
-      "error_type": "connection_error",
-      "error": "[Errno -3] Temporary failure in name resolution"
+      "status_code": 200,
+      "elapsed_sec": 0.829,
+      "state": "OK",
+      "error_type": null,
+      "error": null
     }
   ]
 }
