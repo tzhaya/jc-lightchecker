@@ -2,7 +2,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "jc-lightchecker-trigger",
   "main": "src/index.js",
-  "compatibility_date": "2026-07-08",
+  "compatibility_date": "2026-07-14",
+
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
 
   "vars": {
     "GITHUB_OWNER": "tzhaya",

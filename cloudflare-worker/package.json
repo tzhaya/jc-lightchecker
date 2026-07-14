@@ -6,11 +6,10 @@
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "start": "wrangler dev",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.12.4",
     "vitest": "~3.2.0",
-    "wrangler": "^4.108.0"
+    "wrangler": "^4.110.0"
   }
 }
