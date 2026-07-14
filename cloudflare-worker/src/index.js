@@ -2,27 +2,9 @@ export default {
   async scheduled(controller, env, ctx) {
     ctx.waitUntil(triggerGitHubAction(env, controller));
   },
-
-  async fetch(request, env) {
-    const url = new URL(request.url);
-
-    if (url.pathname !== "/trigger") {
-      return new Response("OK", { status: 200 });
-    }
-
-    const result = await triggerGitHubAction(env, {
-      cron: "manual",
-      scheduledTime: Date.now(),
-    });
-
-    return new Response(JSON.stringify(result, null, 2), {
-      status: result.ok ? 200 : 500,
-      headers: { "content-type": "application/json" },
-    });
-  },
 };
 
-async function triggerGitHubAction(env, controller) {
+export async function triggerGitHubAction(env, controller) {
   const owner = env.GITHUB_OWNER;
   const repo = env.GITHUB_REPO;
   const workflowFile = env.GITHUB_WORKFLOW_FILE;
@@ -46,29 +28,25 @@ async function triggerGitHubAction(env, controller) {
     }),
   });
 
-  const text = await response.text();
-
   if (!response.ok) {
     console.error("GitHub workflow_dispatch failed", {
       status: response.status,
-      body: text,
+      cron: controller.cron,
     });
 
     return {
       ok: false,
       status: response.status,
-      body: text,
     };
   }
 
   console.log("GitHub workflow_dispatch succeeded", {
     status: response.status,
-    body: text,
+    cron: controller.cron,
   });
 
   return {
     ok: true,
     status: response.status,
-    body: text,
   };
 }

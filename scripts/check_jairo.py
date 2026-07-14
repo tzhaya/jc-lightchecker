@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 JST = timezone(timedelta(hours=9))
@@ -79,6 +80,9 @@ def load_targets() -> list[dict[str, Any]]:
     for index, target in enumerate(targets, start=1):
         if not target.get("name") or not target.get("url"):
             raise ValueError(f"Target #{index} must include name and url.")
+        parsed_url = urlparse(str(target["url"]))
+        if parsed_url.scheme != "https" or not parsed_url.netloc:
+            raise ValueError(f"Target #{index} URL must use HTTPS.")
         normalized.append(
             {
                 "name": str(target["name"]),

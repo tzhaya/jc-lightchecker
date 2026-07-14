@@ -119,8 +119,7 @@ python -m http.server 8000
 `cloudflare-worker/` には、GitHub Actions を定期起動する Worker があります。
 
 - cron: `7,22,37,52 * * * *`
-- 手動トリガー: `/trigger`
-- 通常のヘルスチェック: `/trigger` 以外は `OK` を返す
+- Worker は Cron 専用で、公開 HTTP エンドポイントは提供しません。
 
 必要な環境変数は `cloudflare-worker/wrangler.jsonc` に定義されています。
 
@@ -140,8 +139,12 @@ npm run dev
 npm run deploy
 ```
 
+Worker のコードや `wrangler.jsonc` を変更した場合、GitHub への push だけでは
+Cloudflare 上の Worker は更新されません。マージ後に `npm run deploy` を実行してください。
+
 ## 更新履歴
 
+- 2026-07-14: CI・CodeQL・CSP・HTTPS検証を追加し、WorkerをCron専用に変更。
 - 2026-07-14: 観測対象に参考値としてResearchMap、IRDBを追加。
 - 2026-07-11: デジタル庁デザインシステムを参考にダッシュボードの配色とUIを更新し、過去7日間の HTTP サーバーエラー集計表示を追加。
 - 2026-07-09: README を現在の実装内容に合わせて再整理し、構成、実行方法、Cloudflare Worker、ダッシュボードの説明を更新。
