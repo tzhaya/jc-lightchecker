@@ -31,11 +31,12 @@ python scripts/check_jairo.py
 ## 監視対象
 
 監視対象は `targets.yml` で管理します。現在は次の3サイトを対象にしています。
+また、ResearchMap、IRDBを参考値として取得しています。
 
 | URL | 備考 |
 | --- | --- |
-| `https://jircas.repo.nii.ac.jp/` | JIRCAS 系リポジトリ |
-| `https://repository.naro.go.jp/` | 農研機構系リポジトリ |
+| `https://jircas.repo.nii.ac.jp/` | 国際農研機関リポジトリ |
+| `https://repository.naro.go.jp/` | 農研機構機関リポジトリ |
 | `https://tsukuba.repo.nii.ac.jp/` | つくばリポジトリ |
 
 追加する場合は、同じ形式で `targets.yml` に `name`、`url`、`primary` を追加します。各サイトのトップページに対して、1回だけ軽量な GET を行います。
@@ -141,6 +142,7 @@ npm run deploy
 
 ## 更新履歴
 
+- 2026-07-14: 観測対象に参考値としてResearchMap、IRDBを追加。
 - 2026-07-11: デジタル庁デザインシステムを参考にダッシュボードの配色とUIを更新し、過去7日間の HTTP サーバーエラー集計表示を追加。
 - 2026-07-09: README を現在の実装内容に合わせて再整理し、構成、実行方法、Cloudflare Worker、ダッシュボードの説明を更新。
 - 2026-07-08: Cloudflare Worker から GitHub Actions を定期起動する構成、複数サイトの履歴グラフ表示を追加。
