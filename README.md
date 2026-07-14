@@ -130,17 +130,45 @@ python -m http.server 8000
 | `GITHUB_WORKFLOW_FILE` | 起動する workflow ファイル名 |
 | `GITHUB_REF` | 実行対象の ref |
 
-`GITHUB_TOKEN` は Worker secret として設定します。
+`GITHUB_TOKEN` は Worker secret として設定します。初回デプロイ時、または
+Secret が存在しない場合は、値をコマンドライン引数に含めず、対話形式で登録してください。
 
-```bash
+```powershell
 cd cloudflare-worker
-npm ci
-npm run dev
-npm run deploy
+npx wrangler secret put GITHUB_TOKEN
 ```
 
-Worker のコードや `wrangler.jsonc` を変更した場合、GitHub への push だけでは
-Cloudflare 上の Worker は更新されません。マージ後に `npm run deploy` を実行してください。
+### デプロイ
+
+このリポジトリには、GitHubからCloudflare Workersへ自動デプロイする設定はありません。
+Workerのコードや`wrangler.jsonc`を変更した場合、GitHubへのpushやPRのマージだけでは
+Cloudflare上のWorkerは更新されないため、手動で再デプロイします。
+
+```powershell
+cd cloudflare-worker
+npm ci
+npm test
+npm audit --audit-level=low
+npx wrangler deploy --dry-run
+npm run deploy
+npx wrangler deployments list
+```
+
+既存の`GITHUB_TOKEN`はWorker Secretとして保持されるため、通常は再登録不要です。
+デプロイ後は、最新デプロイの作成日時が更新されていること、設定済みCronで
+GitHub Actionsが正常に起動すること、公開HTTPエンドポイントからWorkflowを
+起動できないことを確認してください。
+
+### 2026-07-14のセキュリティ修正
+
+以前のWorkerには、認証なしの`/trigger`からGitHub Actionsを繰り返し起動できる問題が
+ありました。Actions実行枠、監視対象への通信、履歴コミットを増加させる可能性が
+ありましたが、任意コード実行、任意Workflow入力、`GITHUB_TOKEN`や個人情報の漏えいは
+確認されていません。主な影響は可用性とリソース消費で、リスクは低～中程度と評価しています。
+
+この修正以前にリポジトリをcloneしてWorkerをデプロイした利用者は、最新版を取得して
+上記手順で再デプロイしてください。詳細は[Issue #9](https://github.com/tzhaya/jc-lightchecker/issues/9)と
+[PR #10](https://github.com/tzhaya/jc-lightchecker/pull/10)を参照してください。
 
 ## 更新履歴
 
