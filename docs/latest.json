@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-15T08:52:58+09:00",
+  "checked_at": "2026-07-15T09:07:56+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -11,10 +11,10 @@
     "counts": {
       "OK": 5,
       "SLOW": 0,
-      "VERY_SLOW": 0,
+      "VERY_SLOW": 1,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
-      "UNKNOWN": 1
+      "UNKNOWN": 0
     },
     "total": 6,
     "primary_state": null
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.628,
+      "elapsed_sec": 2.383,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.948,
+      "elapsed_sec": 1.378,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.888,
+      "elapsed_sec": 1.251,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -54,18 +54,18 @@
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/tzhaya",
       "primary": false,
-      "status_code": 403,
-      "elapsed_sec": 0.554,
-      "state": "UNKNOWN",
+      "status_code": 200,
+      "elapsed_sec": 19.932,
+      "state": "VERY_SLOW",
       "error_type": null,
-      "error": "HTTP 403: Forbidden"
+      "error": null
     },
     {
       "name": "IRDB(参考)",
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.777,
+      "elapsed_sec": 1.994,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.264,
+      "elapsed_sec": 0.744,
       "state": "OK",
       "error_type": null,
       "error": null
