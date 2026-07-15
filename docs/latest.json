@@ -1,16 +1,16 @@
 {
-  "checked_at": "2026-07-15T14:53:03+09:00",
+  "checked_at": "2026-07-15T15:08:01+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "OK",
-    "message": "大きな異常は確認されていません。",
+    "level": "SLOW",
+    "message": "一部サイトで応答遅延または異常を確認しました。",
     "counts": {
-      "OK": 6,
-      "SLOW": 0,
+      "OK": 5,
+      "SLOW": 1,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 4.104,
+      "elapsed_sec": 4.344,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,8 +35,8 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 4.794,
-      "state": "OK",
+      "elapsed_sec": 5.705,
+      "state": "SLOW",
       "error_type": null,
       "error": null
     },
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 3.172,
+      "elapsed_sec": 4.96,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -55,7 +55,7 @@
       "url": "https://researchmap.jp/tzhaya",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.154,
+      "elapsed_sec": 2.011,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -65,7 +65,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.778,
+      "elapsed_sec": 0.864,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.385,
+      "elapsed_sec": 0.859,
       "state": "OK",
       "error_type": null,
       "error": null
