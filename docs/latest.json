@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-16T15:23:07+09:00",
+  "checked_at": "2026-07-16T15:38:07+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -25,8 +25,8 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 7.085,
-      "state": "SLOW",
+      "elapsed_sec": 4.731,
+      "state": "OK",
       "error_type": null,
       "error": null
     },
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.697,
+      "elapsed_sec": 4.934,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,8 +45,8 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.005,
-      "state": "OK",
+      "elapsed_sec": 6.991,
+      "state": "SLOW",
       "error_type": null,
       "error": null
     },
@@ -55,7 +55,7 @@
       "url": "https://researchmap.jp/tzhaya",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.061,
+      "elapsed_sec": 1.12,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -65,7 +65,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.888,
+      "elapsed_sec": 1.364,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.819,
+      "elapsed_sec": 1.083,
       "state": "OK",
       "error_type": null,
       "error": null
