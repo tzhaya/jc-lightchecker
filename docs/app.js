@@ -9,9 +9,9 @@ const chartLegendEl = document.querySelector("#chartLegend");
 const historyStatsEl = document.querySelector("#historyStats");
 const rangeControlsEl = document.querySelector("#rangeControls");
 const recentErrorsEl = document.querySelector("#recentErrors");
+const recentErrorsDetailsEl = document.querySelector("#recentErrorsDetails");
 const recentErrorsCountEl = document.querySelector("#recentErrorsCount");
 const recentErrorResultsEl = document.querySelector("#recentErrorResults");
-const RECENT_ERROR_ACTIVE_MS = 24 * 60 * 60 * 1000;
 const ranges = {
   "12h": 12 * 60 * 60 * 1000,
   "24h": 24 * 60 * 60 * 1000,
@@ -174,12 +174,10 @@ function buildSeries(records) {
 
 function renderRecentErrors() {
   const errors = RecentErrors.aggregateRecentErrors(historyRecords);
-  const hasErrors = errors.length > 0;
-  recentErrorsEl.hidden = !hasErrors;
-
-  const now = Date.now();
-  recentErrorsEl.open = errors.some((error) => now - error.latestAt <= RECENT_ERROR_ACTIVE_MS);
-  recentErrorsCountEl.textContent = hasErrors ? `${errors.length}リポジトリで検知` : "";
+  const view = RecentErrors.describeRecentErrors(errors);
+  recentErrorsEl.hidden = view.hidden;
+  recentErrorsDetailsEl.open = view.open;
+  recentErrorsCountEl.textContent = view.countText;
 
   recentErrorResultsEl.innerHTML = errors.map((error) => {
     const repository = error.url

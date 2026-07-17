@@ -41,6 +41,33 @@ test("includes the seven-day boundary and excludes older, future, normal, and ma
   assert.deepEqual(result.map(({ name }) => name), ["boundary"]);
 });
 
+test("describeRecentErrors hides the panel and clears the count when there are no errors", () => {
+  const view = globalThis.RecentErrors.describeRecentErrors([], NOW);
+  assert.deepEqual(view, { hidden: true, open: false, countText: "" });
+});
+
+test("describeRecentErrors opens when an error occurred within the last 24h (boundary inclusive)", () => {
+  const activeMs = globalThis.RecentErrors.RECENT_ERROR_ACTIVE_MS;
+
+  const onBoundary = globalThis.RecentErrors.describeRecentErrors([{ latestAt: NOW - activeMs }], NOW);
+  assert.equal(onBoundary.open, true);
+  assert.equal(onBoundary.hidden, false);
+
+  const justOutside = globalThis.RecentErrors.describeRecentErrors([{ latestAt: NOW - activeMs - 1 }], NOW);
+  assert.equal(justOutside.open, false);
+  assert.equal(justOutside.hidden, false);
+});
+
+test("describeRecentErrors reports the repository count regardless of open state", () => {
+  const activeMs = globalThis.RecentErrors.RECENT_ERROR_ACTIVE_MS;
+  const view = globalThis.RecentErrors.describeRecentErrors(
+    [{ latestAt: NOW - activeMs - 1 }, { latestAt: NOW - activeMs - 1 }, { latestAt: NOW - 60_000 }],
+    NOW,
+  );
+  assert.equal(view.countText, "3リポジトリで検知");
+  assert.equal(view.open, true);
+});
+
 test("only accepts HTTPS links", () => {
   const { safeHttpsUrl } = globalThis.RecentErrors;
   assert.equal(safeHttpsUrl("https://example.com/path"), "https://example.com/path");

@@ -565,7 +565,7 @@ button:focus-visible {
   transition: transform 0.15s ease;
 }
 
-.recent-errors[open] .recent-errors-summary::before {
+.recent-errors-details[open] .recent-errors-summary::before {
   transform: rotate(90deg);
 }
 
@@ -576,6 +576,7 @@ button:focus-visible {
 }
 
 .recent-errors-title {
+  margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.4;
