@@ -1,20 +1,20 @@
 {
-  "checked_at": "2026-07-17T09:53:05+09:00",
+  "checked_at": "2026-07-17T10:08:06+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "VERY_SLOW",
-    "message": "複数サイトで応答遅延または異常を確認しました。広域的遅延の可能性があります。",
+    "level": "SLOW",
+    "message": "一部サイトで応答遅延または異常を確認しました。",
     "counts": {
-      "OK": 2,
-      "SLOW": 2,
-      "VERY_SLOW": 1,
+      "OK": 4,
+      "SLOW": 0,
+      "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
-      "UNKNOWN": 1
+      "UNKNOWN": 2
     },
     "total": 6,
     "primary_state": null
@@ -25,8 +25,8 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 6.247,
-      "state": "SLOW",
+      "elapsed_sec": 1.47,
+      "state": "OK",
       "error_type": null,
       "error": null
     },
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 4.14,
+      "elapsed_sec": 1.133,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,8 +45,8 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 7.073,
-      "state": "SLOW",
+      "elapsed_sec": 0.893,
+      "state": "OK",
       "error_type": null,
       "error": null
     },
@@ -54,18 +54,18 @@
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/tzhaya",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 16.19,
-      "state": "VERY_SLOW",
+      "status_code": 403,
+      "elapsed_sec": 0.546,
+      "state": "UNKNOWN",
       "error_type": null,
-      "error": null
+      "error": "HTTP 403: Forbidden"
     },
     {
       "name": "IRDB(参考)",
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.829,
+      "elapsed_sec": 0.764,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 403,
-      "elapsed_sec": 0.43,
+      "elapsed_sec": 0.345,
       "state": "UNKNOWN",
       "error_type": null,
       "error": "HTTP 403: Forbidden"
