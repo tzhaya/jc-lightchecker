@@ -544,14 +544,52 @@ button:focus-visible {
   box-shadow: var(--shadow);
 }
 
-.recent-errors h2 {
-  margin: 0 0 8px;
+.recent-errors-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.recent-errors-summary::-webkit-details-marker {
+  display: none;
+}
+
+.recent-errors-summary::before {
+  content: "\25b6";
+  align-self: center;
+  font-size: 0.75rem;
+  color: var(--error);
+  transition: transform 0.15s ease;
+}
+
+.recent-errors-details[open] .recent-errors-summary::before {
+  transform: rotate(90deg);
+}
+
+.recent-errors-summary:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.recent-errors-title {
+  margin: 0;
   font-size: 1.25rem;
+  font-weight: 700;
   line-height: 1.4;
 }
 
+.recent-errors-count {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--error);
+}
+
 .recent-errors p {
-  margin: 0 0 16px;
+  margin: 16px 0;
   color: var(--muted);
 }
 

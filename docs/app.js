@@ -9,6 +9,8 @@ const chartLegendEl = document.querySelector("#chartLegend");
 const historyStatsEl = document.querySelector("#historyStats");
 const rangeControlsEl = document.querySelector("#rangeControls");
 const recentErrorsEl = document.querySelector("#recentErrors");
+const recentErrorsDetailsEl = document.querySelector("#recentErrorsDetails");
+const recentErrorsCountEl = document.querySelector("#recentErrorsCount");
 const recentErrorResultsEl = document.querySelector("#recentErrorResults");
 const ranges = {
   "12h": 12 * 60 * 60 * 1000,
@@ -172,7 +174,11 @@ function buildSeries(records) {
 
 function renderRecentErrors() {
   const errors = RecentErrors.aggregateRecentErrors(historyRecords);
-  recentErrorsEl.hidden = errors.length === 0;
+  const view = RecentErrors.describeRecentErrors(errors);
+  recentErrorsEl.hidden = view.hidden;
+  recentErrorsDetailsEl.open = view.open;
+  recentErrorsCountEl.textContent = view.countText;
+
   recentErrorResultsEl.innerHTML = errors.map((error) => {
     const repository = error.url
       ? `<a href="${escapeAttr(error.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(error.name)}</a>`

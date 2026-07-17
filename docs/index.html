@@ -43,21 +43,26 @@
       </section>
 
       <section class="recent-errors" id="recentErrors" aria-labelledby="recentErrorsTitle" hidden>
-        <h2 id="recentErrorsTitle">過去7日間に検知したHTTPエラー/Timeout</h2>
-        <p>過去7日間にサーバーが返した 500、502、503、504 エラーと、Timeout の発生回数を集計しています。</p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">対象リポジトリ</th>
-                <th scope="col">HTTPエラー件数</th>
-                <th scope="col">Timeout件数</th>
-                <th scope="col">直近の発生日時</th>
-              </tr>
-            </thead>
-            <tbody id="recentErrorResults"></tbody>
-          </table>
-        </div>
+        <details class="recent-errors-details" id="recentErrorsDetails">
+          <summary class="recent-errors-summary">
+            <h2 class="recent-errors-title" id="recentErrorsTitle">過去7日間に検知したHTTPエラー/Timeout</h2>
+            <span class="recent-errors-count" id="recentErrorsCount"></span>
+          </summary>
+          <p>過去7日間にサーバーが返した 500、502、503、504 エラーと、Timeout の発生回数を集計しています。</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">対象リポジトリ</th>
+                  <th scope="col">HTTPエラー件数</th>
+                  <th scope="col">Timeout件数</th>
+                  <th scope="col">直近の発生日時</th>
+                </tr>
+              </thead>
+              <tbody id="recentErrorResults"></tbody>
+            </table>
+          </div>
+        </details>
       </section>
 
       <section class="table-wrap" aria-label="site status">
