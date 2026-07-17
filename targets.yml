@@ -8,8 +8,11 @@ targets:
   - name: つくばリポジトリ
     url: https://tsukuba.repo.nii.ac.jp/
     primary: false
+  - name: 情報学広場
+    url: https://ipsj.ixsq.nii.ac.jp/
+    primary: false
   - name: ResearchMap(参考)
-    url: https://researchmap.jp/tzhaya
+    url: https://researchmap.jp/
     primary: false
   - name: IRDB(参考)
     url: https://irdb.nii.ac.jp/
