@@ -1,20 +1,20 @@
 {
-  "checked_at": "2026-07-19T05:08:02+09:00",
+  "checked_at": "2026-07-19T05:23:02+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "OK",
-    "message": "大きな異常は確認されていません。",
+    "level": "VERY_SLOW",
+    "message": "複数サイトで応答遅延または異常を確認しました。広域的遅延の可能性があります。",
     "counts": {
-      "OK": 7,
-      "SLOW": 0,
+      "OK": 3,
+      "SLOW": 1,
       "VERY_SLOW": 0,
-      "SERVER_ERROR": 0,
+      "SERVER_ERROR": 1,
       "TIMEOUT": 0,
-      "UNKNOWN": 0
+      "UNKNOWN": 2
     },
     "total": 7,
     "primary_state": null
@@ -25,8 +25,8 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.476,
-      "state": "OK",
+      "elapsed_sec": 9.473,
+      "state": "SLOW",
       "error_type": null,
       "error": null
     },
@@ -34,18 +34,18 @@
       "name": "農研機構機関リポジトリ",
       "url": "https://repository.naro.go.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 1.024,
-      "state": "OK",
-      "error_type": null,
-      "error": null
+      "status_code": null,
+      "elapsed_sec": 10.014,
+      "state": "UNKNOWN",
+      "error_type": "connection_error",
+      "error": "[Errno -3] Temporary failure in name resolution"
     },
     {
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.775,
+      "elapsed_sec": 3.007,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -55,7 +55,7 @@
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.646,
+      "elapsed_sec": 4.835,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -64,18 +64,18 @@
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 0.995,
-      "state": "OK",
+      "status_code": 502,
+      "elapsed_sec": 4.75,
+      "state": "SERVER_ERROR",
       "error_type": null,
-      "error": null
+      "error": "HTTP 502: Bad Gateway"
     },
     {
       "name": "IRDB(参考)",
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.078,
+      "elapsed_sec": 1.207,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -84,11 +84,11 @@
       "name": "AgriKnowledge(参考)",
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 0.98,
-      "state": "OK",
-      "error_type": null,
-      "error": null
+      "status_code": null,
+      "elapsed_sec": 10.016,
+      "state": "UNKNOWN",
+      "error_type": "connection_error",
+      "error": "[Errno -3] Temporary failure in name resolution"
     }
   ]
 }
