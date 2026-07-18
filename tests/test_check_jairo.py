@@ -1,5 +1,9 @@
+import importlib
+import json
+import os
 import tempfile
 import unittest
+from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -39,6 +43,64 @@ class TargetTests(unittest.TestCase):
                 self.assertEqual(check_jairo.load_targets(), [{
                     "name": "safe", "url": "https://example.com/", "primary": True,
                 }])
+
+
+class HistoryRetentionConfigTests(unittest.TestCase):
+    def test_defaults_to_14_days_when_unset(self):
+        self.assertEqual(check_jairo.HISTORY_RETENTION_DAYS, 14)
+
+    def test_reads_override_from_environment(self):
+        with patch.dict(os.environ, {"HISTORY_RETENTION_DAYS": "30"}):
+            importlib.reload(check_jairo)
+        try:
+            self.assertEqual(check_jairo.HISTORY_RETENTION_DAYS, 30)
+        finally:
+            importlib.reload(check_jairo)
+
+
+class HistoryPruneTests(unittest.TestCase):
+    def _write_history(self, path, records):
+        with path.open("w", encoding="utf-8") as f:
+            for record in records:
+                f.write(json.dumps(record) + "\n")
+
+    def test_keeps_records_within_retention(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "history.jsonl"
+            now = datetime.now(check_jairo.JST)
+            recent = {"checked_at": now.isoformat(timespec="seconds")}
+            self._write_history(path, [recent])
+            with patch.object(check_jairo, "HISTORY_FILE", path):
+                check_jairo.prune_history(14)
+            kept = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(kept, [recent])
+
+    def test_drops_records_older_than_retention(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "history.jsonl"
+            now = datetime.now(check_jairo.JST)
+            old = {"checked_at": (now - timedelta(days=20)).isoformat(timespec="seconds")}
+            recent = {"checked_at": now.isoformat(timespec="seconds")}
+            self._write_history(path, [old, recent])
+            with patch.object(check_jairo, "HISTORY_FILE", path):
+                check_jairo.prune_history(14)
+            kept = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(kept, [recent])
+
+    def test_drops_unparseable_lines_without_raising(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "history.jsonl"
+            path.write_text('not json\n{"checked_at": "not a date"}\n', encoding="utf-8")
+            with patch.object(check_jairo, "HISTORY_FILE", path):
+                check_jairo.prune_history(14)
+            self.assertEqual(path.read_text(encoding="utf-8"), "")
+
+    def test_missing_file_does_not_raise(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "does-not-exist.jsonl"
+            with patch.object(check_jairo, "HISTORY_FILE", path):
+                check_jairo.prune_history(14)
+            self.assertFalse(path.exists())
 
 
 if __name__ == "__main__":

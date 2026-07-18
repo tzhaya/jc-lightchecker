@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import socket
 import time
 from datetime import datetime, timedelta, timezone
@@ -20,6 +21,7 @@ HISTORY_FILE = OUTPUT_DIR / "history.jsonl"
 TIMEOUT_SEC = 20
 SLOW_SEC = 5
 VERY_SLOW_SEC = 15
+HISTORY_RETENTION_DAYS = int(os.environ.get("HISTORY_RETENTION_DAYS", "14"))
 
 USER_AGENT = "jc-lightchecker/0.1 (+https://github.com/tzhaya/jc-lightchecker)"
 STATES = ("OK", "SLOW", "VERY_SLOW", "SERVER_ERROR", "TIMEOUT", "UNKNOWN")
@@ -203,6 +205,31 @@ def build_latest(targets: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def prune_history(retention_days: int) -> None:
+    if not HISTORY_FILE.exists():
+        return
+
+    cutoff = datetime.now(JST) - timedelta(days=retention_days)
+    kept_lines: list[str] = []
+    with HISTORY_FILE.open("r", encoding="utf-8") as f:
+        for raw_line in f:
+            line = raw_line.strip()
+            if not line:
+                continue
+            try:
+                checked_at = datetime.fromisoformat(json.loads(line)["checked_at"])
+            except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+                # Drop unparseable lines (e.g. a partial write from an interrupted
+                # run) rather than keep them around forever.
+                continue
+            if checked_at >= cutoff:
+                kept_lines.append(line)
+
+    with HISTORY_FILE.open("w", encoding="utf-8") as f:
+        for line in kept_lines:
+            f.write(line + "\n")
+
+
 def write_outputs(latest: dict[str, Any]) -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     with LATEST_FILE.open("w", encoding="utf-8") as f:
@@ -211,6 +238,13 @@ def write_outputs(latest: dict[str, Any]) -> None:
 
     with HISTORY_FILE.open("a", encoding="utf-8") as f:
         f.write(json.dumps(latest, ensure_ascii=False, separators=(",", ":")) + "\n")
+
+    try:
+        prune_history(HISTORY_RETENTION_DAYS)
+    except Exception:
+        # Best-effort: a pruning failure must not block the check itself from
+        # succeeding. The next run will retry.
+        pass
 
 
 def main() -> int:
