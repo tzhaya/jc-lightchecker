@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-19T18:22:07+09:00",
+  "checked_at": "2026-07-19T18:37:09+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -9,8 +9,8 @@
     "level": "SLOW",
     "message": "一部サイトで応答遅延または異常を確認しました。",
     "counts": {
-      "OK": 5,
-      "SLOW": 2,
+      "OK": 6,
+      "SLOW": 1,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
@@ -25,8 +25,8 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 4.137,
-      "state": "OK",
+      "elapsed_sec": 5.964,
+      "state": "SLOW",
       "error_type": null,
       "error": null
     },
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.469,
+      "elapsed_sec": 2.479,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,8 +45,8 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 6.041,
-      "state": "SLOW",
+      "elapsed_sec": 1.566,
+      "state": "OK",
       "error_type": null,
       "error": null
     },
@@ -55,8 +55,8 @@
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 7.959,
-      "state": "SLOW",
+      "elapsed_sec": 1.996,
+      "state": "OK",
       "error_type": null,
       "error": null
     },
@@ -65,7 +65,7 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.087,
+      "elapsed_sec": 0.765,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.633,
+      "elapsed_sec": 1.336,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.106,
+      "elapsed_sec": 0.766,
       "state": "OK",
       "error_type": null,
       "error": null
