@@ -56,7 +56,7 @@ Python コードは**標準ライブラリのみ**を使う（`requirements.txt`
   - `write_outputs` は追記のたびに `prune_history` を呼び、`HISTORY_RETENTION_DAYS`（環境変数、デフォルト14日。`check.yml` では `vars.HISTORY_RETENTION_DAYS` で上書き可能）より古い `history.jsonl` の行を刈り込む。刈り込み中の例外はすべて捕捉し、失敗時は当該回をスキップする（異常終了しない不変条件を優先する）。
   - 状態分類（`classify`）と、サイト横断の総合判定ロジック（`summarize`）が最も慎重を要する部分。しきい値は `SLOW=5秒`、`VERY_SLOW=15秒`、`TIMEOUT=20秒`。タイムスタンプは JST。
 
-- **`docs/` ダッシュボード**は静的で**ビルド工程なし**。厳格な CSP（`index.html` の meta タグ）がインラインの script と style を禁止しており、`tests/recent-errors.test.js` がこれをアサートする。よって JS はすべて `.js`、CSS はすべて `styles.css` に置き、`<style>`・インライン `<script>`・`style=` 属性は使わないこと。同テストはデザイントークン（例: `--primary: #0017c1`、デジタル庁デザインシステム由来のテーマ）やレイアウト規則も固定しているため、テーマ変更前に必ず確認する。
+- **`docs/` ダッシュボード**は静的で**ビルド工程なし**。厳格な CSP（`index.html` の meta タグ）がインラインの script と style を禁止しており、`tests/recent-errors.test.js` がこれをアサートする。よって JS はすべて `.js`、CSS はすべて `styles.css` に置き、`<style>`・インライン `<script>`・`style=` 属性は使わないこと。同テストはデザイントークン（例: `--primary: #0017c1`、デジタル庁デザインシステム由来のテーマ）やレイアウト規則も固定しているため、テーマ変更前に必ず確認する。デザインの参照は `~/.claude/skills/dads/`（Skill としてインストール済みの場合、自動的に参照される）または https://design.digital.go.jp/dads/ を直接参照する。モデルの事前学習知識だけで配色・トークン値を断定しないこと。
   - `docs/recent-errors.js` は IIFE で `globalThis.RecentErrors` を公開し、ブラウザと Node のテストランナーの両方で同一ファイルが無改変で動くようにしている。HTTPS 限定のリンク検証（`safeHttpsUrl`）は Python 側の HTTPS チェックと対応している。
 
 - **`cloudflare-worker/`** は cron 専用の Worker（`scheduled` ハンドラのみ。`fetch`/公開 HTTP エンドポイントは持たない — 意図的なセキュリティ特性。README の 2026-07-14 の記述を参照）。`GITHUB_TOKEN`（Worker secret。その他の設定は `wrangler.jsonc` の `vars`）を用いて GitHub Actions へ `workflow_dispatch` を POST する。cron スケジュールは GitHub workflow 側ではなく `wrangler.jsonc` にある。
