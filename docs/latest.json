@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-23T04:07:30+09:00",
+  "checked_at": "2026-07-23T04:22:38+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.869,
+      "elapsed_sec": 1.632,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.483,
+      "elapsed_sec": 1.216,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.139,
+      "elapsed_sec": 1.024,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -55,7 +55,7 @@
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 0.629,
+      "elapsed_sec": 0.594,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Temporarily Unavailable"
@@ -65,7 +65,7 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.043,
+      "elapsed_sec": 0.979,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.63,
+      "elapsed_sec": 1.099,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.733,
+      "elapsed_sec": 0.915,
       "state": "OK",
       "error_type": null,
       "error": null
