@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-23T14:22:34+09:00",
+  "checked_at": "2026-07-23T14:37:30+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -9,8 +9,8 @@
     "level": "SLOW",
     "message": "一部サイトで応答遅延または異常を確認しました。",
     "counts": {
-      "OK": 6,
-      "SLOW": 1,
+      "OK": 4,
+      "SLOW": 3,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 5.34,
+      "elapsed_sec": 5.305,
       "state": "SLOW",
       "error_type": null,
       "error": null
@@ -35,8 +35,8 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.301,
-      "state": "OK",
+      "elapsed_sec": 6.072,
+      "state": "SLOW",
       "error_type": null,
       "error": null
     },
@@ -45,8 +45,8 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.905,
-      "state": "OK",
+      "elapsed_sec": 7.996,
+      "state": "SLOW",
       "error_type": null,
       "error": null
     },
@@ -55,7 +55,7 @@
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.878,
+      "elapsed_sec": 2.435,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -65,7 +65,7 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.078,
+      "elapsed_sec": 1.043,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.463,
+      "elapsed_sec": 1.224,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.702,
+      "elapsed_sec": 0.753,
       "state": "OK",
       "error_type": null,
       "error": null
