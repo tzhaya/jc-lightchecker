@@ -54,8 +54,9 @@ Python コードは**標準ライブラリのみ**を使う（`requirements.txt`
 - **`scripts/check_jairo.py`** が中核。テストと CI が依存する、意図的な挙動に注意:
   - **異常終了しない**。全面的な失敗時でも、有効な `latest.json`/`history.jsonl` レコード（`level: UNKNOWN`）を書き出し、ダッシュボードが常にデータを持てるようにしている。
   - `targets.yml` は PyYAML ではなく**自前の最小パーサ**（`load_targets`）で解析する。理解できるのは `name`/`url`/`primary` のフラットなリスト構造だけで、複雑な YAML は壊れる。各対象 URL は HTTPS であることを検証し、そうでなければ拒否する。
-  - **ファイル出力はすべて `write_text_atomic`（一時ファイル + `os.replace`）を通す。** `open(path, "w")` は開いた時点で truncate するため、途中で失敗すると例外を捕捉しても公開ファイルが壊れる。特に `docs/index.html` は手で保守しているソースであり、再生成する元がない。
-  - `write_outputs` は追記のたびに `prune_history` を呼び、`HISTORY_RETENTION_DAYS`（環境変数、デフォルト14日。`check.yml` では `vars.HISTORY_RETENTION_DAYS` で上書き可能）より古い `history.jsonl` の行を刈り込む。刈り込み中の例外はすべて捕捉し、失敗時は当該回をスキップする（異常終了しない不変条件を優先する）。
+  - **ファイル出力はすべて `write_text_atomic`（一時ファイル + `os.replace`）を通す。追記モード（`open(path, "a")`）も使わない。** `open(path, "w")` は開いた時点で truncate するため、途中で失敗すると例外を捕捉しても公開ファイルが壊れる。追記も中断されれば部分行が残り、`docs/app.js` は `history.jsonl` を1行ずつパースするため壊れる。特に `docs/index.html` は手で保守しているソースであり、再生成する元がない。
+  - `write_outputs` は `append_history` を呼ぶ。これは既存行の刈り込みと新レコードの追加を**1回の置換にまとめて**行い、`HISTORY_RETENTION_DAYS`（環境変数、デフォルト14日。`check.yml` では `vars.HISTORY_RETENTION_DAYS` で上書き可能）より古い行を落とす。例外はすべて捕捉し、失敗時は当該回をスキップする（1サンプルを失う方が、実行を失敗させるよりよい）。
+  - `write_outputs` の中で `latest.json` の書き込み**だけ**は保護しない。これが書けなければダッシュボードに出すものが無く、実行が失敗として見えるべきだからである。それ以降（履歴、`index.html`）は `latest.json` が既に書けている前提なので best-effort でよい。この非対称は意図的なもの。
   - `write_outputs` は続けて `update_index_metadata` を呼び、`docs/index.html` の `og:description` と `twitter:description` の `content` 属性**だけ**を現在の状態で書き換える。title 系は静的で、書き換えない。`prune_history` と同様に例外はすべて捕捉し、失敗時は当該回をスキップする。該当タグがちょうど1つ見つからなければ書き込まず `ValueError` を投げる（片方だけ更新された HTML を出さないため）。
   - 状態分類（`classify`）と、サイト横断の総合判定ロジック（`summarize`）が最も慎重を要する部分。しきい値は `SLOW=5秒`、`VERY_SLOW=15秒`、`TIMEOUT=20秒`。タイムスタンプは JST。
 

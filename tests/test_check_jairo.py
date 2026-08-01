@@ -123,6 +123,77 @@ LATEST_FIXTURE = {
 }
 
 
+class HistoryAppendTests(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.directory = Path(directory.name)
+        self.path = self.directory / "history.jsonl"
+
+    def test_adds_one_record_and_drops_expired_ones_in_one_write(self):
+        stale = (datetime.now(check_jairo.JST) - timedelta(days=30)).isoformat()
+        fresh = (datetime.now(check_jairo.JST) - timedelta(days=1)).isoformat()
+        self.path.write_text(
+            json.dumps({"checked_at": stale}) + "\n" + json.dumps({"checked_at": fresh}) + "\n",
+            encoding="utf-8",
+        )
+
+        with patch.object(check_jairo, "HISTORY_FILE", self.path):
+            check_jairo.append_history(LATEST_FIXTURE, 14)
+
+        lines = self.path.read_text(encoding="utf-8").splitlines()
+        self.assertEqual(len(lines), 2)
+        self.assertEqual(json.loads(lines[0])["checked_at"], fresh)
+        self.assertEqual(json.loads(lines[-1])["checked_at"], LATEST_FIXTURE["checked_at"])
+
+    def test_creates_the_file_when_missing(self):
+        with patch.object(check_jairo, "HISTORY_FILE", self.path):
+            check_jairo.append_history(LATEST_FIXTURE, 14)
+        self.assertEqual(len(self.path.read_text(encoding="utf-8").splitlines()), 1)
+
+    def test_never_leaves_a_partial_record_behind(self):
+        original = json.dumps({"checked_at": "2026-08-01T00:00:00+09:00"}) + "\n"
+        self.path.write_text(original, encoding="utf-8")
+        before = self.path.read_bytes()
+
+        with patch.object(check_jairo, "HISTORY_FILE", self.path), \
+                patch.object(check_jairo.os, "replace", side_effect=OSError("disk full")):
+            with self.assertRaises(OSError):
+                check_jairo.append_history(LATEST_FIXTURE, 14)
+
+        # A mode="a" append could have left half a line here; the whole-file
+        # replacement cannot, and docs/app.js parses this file line by line.
+        self.assertEqual(self.path.read_bytes(), before)
+        self.assertFalse(self.path.with_name(self.path.name + ".tmp").exists())
+
+    def test_main_exits_zero_when_the_append_fails(self):
+        original = json.dumps({"checked_at": "2026-08-01T00:00:00+09:00"}) + "\n"
+        self.path.write_text(original, encoding="utf-8")
+        before = self.path.read_bytes()
+        latest_file = self.directory / "latest.json"
+        index_file = self.directory / "index.html"
+        with check_jairo.INDEX_FILE.open("r", encoding="utf-8", newline="") as f:
+            index_file.write_text(f.read(), encoding="utf-8", newline="")
+
+        real_write = check_jairo.write_text_atomic
+
+        def fail_for_history(path, text):
+            if path == self.path:
+                raise OSError("disk full")
+            return real_write(path, text)
+
+        with patch.object(check_jairo, "HISTORY_FILE", self.path), \
+                patch.object(check_jairo, "LATEST_FILE", latest_file), \
+                patch.object(check_jairo, "INDEX_FILE", index_file), \
+                patch.object(check_jairo, "OUTPUT_DIR", self.directory), \
+                patch.object(check_jairo, "load_targets", return_value=[]), \
+                patch.object(check_jairo, "write_text_atomic", side_effect=fail_for_history):
+            self.assertEqual(check_jairo.main(), 0)
+
+        self.assertEqual(self.path.read_bytes(), before)
+        self.assertTrue(latest_file.exists())
+
+
 class WriteTextAtomicTests(unittest.TestCase):
     def test_leaves_original_intact_when_replace_fails(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -284,9 +284,9 @@ def update_index_metadata(latest: dict[str, Any]) -> None:
     write_text_atomic(INDEX_FILE, markup)
 
 
-def prune_history(retention_days: int) -> None:
+def retained_history_lines(retention_days: int) -> list[str]:
     if not HISTORY_FILE.exists():
-        return
+        return []
 
     cutoff = datetime.now(JST) - timedelta(days=retention_days)
     kept_lines: list[str] = []
@@ -304,30 +304,52 @@ def prune_history(retention_days: int) -> None:
             if checked_at >= cutoff:
                 kept_lines.append(line)
 
-    write_text_atomic(HISTORY_FILE, "".join(line + "\n" for line in kept_lines))
+    return kept_lines
+
+
+def prune_history(retention_days: int) -> None:
+    if not HISTORY_FILE.exists():
+        return
+
+    write_text_atomic(
+        HISTORY_FILE, "".join(line + "\n" for line in retained_history_lines(retention_days))
+    )
+
+
+def append_history(latest: dict[str, Any], retention_days: int) -> None:
+    """Add one record and drop expired ones in a single atomic replacement.
+
+    Appending with mode "a" would be simpler but can leave a half-written line
+    behind if the process dies mid-write, and `docs/app.js` parses this file a
+    line at a time. Rewriting the whole file through write_text_atomic means
+    history.jsonl only ever holds complete records.
+    """
+    lines = retained_history_lines(retention_days)
+    lines.append(json.dumps(latest, ensure_ascii=False, separators=(",", ":")))
+    write_text_atomic(HISTORY_FILE, "".join(line + "\n" for line in lines))
 
 
 def write_outputs(latest: dict[str, Any]) -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    # Not guarded: if the current result cannot be written there is nothing for
+    # the dashboard to show, so the run should fail loudly. Everything below is
+    # best-effort, because by then latest.json has already landed.
     write_text_atomic(LATEST_FILE, json.dumps(latest, ensure_ascii=False, indent=2) + "\n")
 
-    with HISTORY_FILE.open("a", encoding="utf-8", newline="") as f:
-        f.write(json.dumps(latest, ensure_ascii=False, separators=(",", ":")) + "\n")
-
     try:
-        prune_history(HISTORY_RETENTION_DAYS)
+        append_history(latest, HISTORY_RETENTION_DAYS)
     except Exception:
-        # Best-effort: a pruning failure must not block the check itself from
-        # succeeding. The next run will retry.
+        # Losing one sample is preferable to failing the run: write_text_atomic
+        # leaves the existing history intact, and the next run appends again.
         pass
 
     try:
         update_index_metadata(latest)
     except Exception:
-        # Same best-effort contract as pruning. write_text_atomic guarantees a
-        # failure here leaves the published index.html intact, which matters
-        # more than for the outputs above: index.html is hand-maintained source
-        # with nothing to regenerate it from.
+        # Same best-effort contract as the history append. write_text_atomic
+        # guarantees a failure here leaves the published index.html intact,
+        # which matters more than for the outputs above: index.html is
+        # hand-maintained source with nothing to regenerate it from.
         pass
 
 
