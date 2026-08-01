@@ -28,10 +28,13 @@
       if (!Number.isFinite(checkedAt)) {
         continue;
       }
+      // A missing elapsed_sec stays non-finite rather than becoming Number(null)
+      // === 0, so the renderer shows "-" like the latest-results table does.
+      const elapsed = match.elapsed_sec;
       rows.push({
         checkedAt,
         statusCode: match.status_code,
-        elapsedSec: Number(match.elapsed_sec),
+        elapsedSec: elapsed === null || elapsed === undefined ? null : Number(elapsed),
         state: match.state || "UNKNOWN",
         error: match.error,
       });
@@ -54,20 +57,31 @@
 
   // Canonical site order drives both the repo filter's option list and the
   // fixed color assignment (colorForKey). It is resolved once and frozen by
-  // the caller: latest.json.results is authoritative when non-empty; history's
-  // newest record is only a fallback for when latest.json failed or returned
-  // no results (e.g. a targets.yml load failure during the check run).
+  // the caller: latest.json.results is authoritative when non-empty; history is
+  // only a fallback for when latest.json failed or returned no results (e.g. a
+  // targets.yml load failure during the check run). Returns null when no source
+  // yields any site yet, so the caller knows not to freeze.
   function resolveCanonicalSites(input) {
     const { latestStatus, latestResults, historyRecords } = input || {};
-    if (latestStatus === "success" && Array.isArray(latestResults) && latestResults.length > 0) {
-      return orderFromResults(latestResults);
+    if (latestStatus === "success") {
+      const order = orderFromResults(latestResults);
+      if (order.length > 0) {
+        return order;
+      }
     }
     if (latestStatus === "pending") {
       return null;
     }
+    // Newest-first, but skipping records that carry no targets: a check run that
+    // fails at init appends a `results: []` record (check_jairo.py main()), and
+    // freezing on that would strand the dashboard with no sites and no colors
+    // until the next successful run.
     const records = Array.isArray(historyRecords) ? historyRecords : [];
-    if (records.length > 0) {
-      return orderFromResults(records[records.length - 1].results);
+    for (let index = records.length - 1; index >= 0; index -= 1) {
+      const order = orderFromResults(records[index]?.results);
+      if (order.length > 0) {
+        return order;
+      }
     }
     return null;
   }

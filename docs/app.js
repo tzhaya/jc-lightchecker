@@ -304,7 +304,10 @@ function renderHistory() {
     </svg>
   `;
 
-  chartLegendEl.innerHTML = series.length > 1 ? series.map((site) => `
+  // Filtering to one repository names it in the table heading below, so the
+  // legend would just repeat it. Unfiltered, every line needs its label -- even
+  // when the range happens to leave only one site with samples.
+  chartLegendEl.innerHTML = activeRepoKey === "all" ? series.map((site) => `
     <span class="legend-item">
       <span class="legend-swatch legend-swatch--${site.paletteIndex ?? "fallback"}"></span>
       ${escapeHtml(site.name)}
@@ -361,15 +364,13 @@ function tryFreezeCanonicalSites() {
   }
   canonicalSites = resolved;
   activeRepoKey = RepoFilter.resolveActiveRepoKey(activeRepoKey, canonicalSites);
-  writeRepoKeyToHash(activeRepoKey);
   populateRepoFilterOptions();
+  writeRepoKeyToHash(activeRepoKey);
 }
 
-// Called after every latest.json / history.jsonl settle (success or failure),
-// in any order. Attempts the one-time freeze above, then decides what the
-// history panel should show right now: a history fetch failure always wins
-// (shown immediately, even if canonical order never freezes); otherwise
-// nothing is drawn until canonical order is frozen AND history has arrived.
+// The single entry point for (re)drawing the history panel: called after every
+// latest.json / history.jsonl settle in any order, and from the filter controls.
+// Attempts the one-time freeze above, then decides what to show right now.
 function renderIfReady() {
   tryFreezeCanonicalSites();
   if (historyStatus === "failed") {
@@ -377,8 +378,18 @@ function renderIfReady() {
     recentErrorsEl.hidden = true;
     return;
   }
-  if (canonicalSites === null || historyStatus === "pending") {
+  if (historyStatus === "pending") {
     return;
+  }
+  if (canonicalSites === null) {
+    // Colors are keyed to the canonical order, so while latest.json could still
+    // arrive with one, wait rather than paint a provisional palette. Once it has
+    // settled too, no source carries any site at all — fall through and let
+    // renderHistory show its empty state instead of a stuck placeholder.
+    if (latestStatus === "pending") {
+      return;
+    }
+    activeRepoKey = RepoFilter.resolveActiveRepoKey(activeRepoKey, canonicalSites);
   }
   renderHistory();
   renderRepoHistory();
@@ -419,15 +430,13 @@ rangeControlsEl.addEventListener("click", (event) => {
   for (const rangeButton of rangeControlsEl.querySelectorAll("[data-range]")) {
     rangeButton.setAttribute("aria-pressed", String(rangeButton === button));
   }
-  renderHistory();
-  renderRepoHistory();
+  renderIfReady();
 });
 
 repoFilterEl.addEventListener("change", () => {
   activeRepoKey = repoFilterEl.value;
   writeRepoKeyToHash(activeRepoKey);
-  renderHistory();
-  renderRepoHistory();
+  renderIfReady();
 });
 
 fetch("latest.json", { cache: "no-store" })

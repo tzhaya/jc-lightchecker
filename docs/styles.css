@@ -126,13 +126,19 @@ h1 {
   font-size: 1.1rem;
 }
 
-.history-panel {
+.history-panel,
+.repo-history {
   margin-bottom: 18px;
   padding: 18px;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
+}
+
+.repo-history-title {
+  margin: 0 0 14px;
+  font-size: 1.05rem;
 }
 
 .panel-head {

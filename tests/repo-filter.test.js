@@ -95,6 +95,67 @@ test("resolveCanonicalSites falls back to the newest history record when latest.
   ]);
 });
 
+test("resolveCanonicalSites skips history records that carry no targets", () => {
+  const { resolveCanonicalSites } = globalThis.RepoFilter;
+  // check_jairo.py appends a `results: []` record whenever a run fails at init,
+  // so the newest record is not always the one that knows the targets.
+  const sites = resolveCanonicalSites({
+    latestStatus: "failed",
+    latestResults: [],
+    historyRecords: [
+      record("2026-08-01T00:00:00Z", [result("A", "https://a.example/")]),
+      record("2026-08-01T00:15:00Z", []),
+      record("2026-08-01T00:30:00Z", undefined),
+    ],
+  });
+  assert.deepEqual(sites, [{ key: "https://a.example/", name: "A" }]);
+});
+
+test("resolveCanonicalSites returns null when every history record is empty", () => {
+  const { resolveCanonicalSites } = globalThis.RepoFilter;
+  assert.equal(resolveCanonicalSites({
+    latestStatus: "failed",
+    latestResults: [],
+    historyRecords: [record("2026-08-01T00:00:00Z", []), record("2026-08-01T00:15:00Z", [])],
+  }), null);
+});
+
+test("resolveCanonicalSites dedupes keys and falls back to the key when a name is missing", () => {
+  const { resolveCanonicalSites } = globalThis.RepoFilter;
+  const sites = resolveCanonicalSites({
+    latestStatus: "success",
+    latestResults: [
+      result("A", "https://a.example/"),
+      result("A again", "https://a.example/"),
+      { url: "https://b.example/", name: null },
+      { status_code: 200 },
+    ],
+    historyRecords: [],
+  });
+  assert.deepEqual(sites, [
+    { key: "https://a.example/", name: "A" },
+    { key: "https://b.example/", name: "https://b.example/" },
+  ]);
+});
+
+test("siteKeyOf keys off url, falling back to name, matching buildSeries in app.js", () => {
+  const { siteKeyOf } = globalThis.RepoFilter;
+  assert.equal(siteKeyOf({ url: "https://a.example/", name: "A" }), "https://a.example/");
+  assert.equal(siteKeyOf({ name: "name-only" }), "name-only");
+  assert.equal(siteKeyOf({}), null);
+  assert.equal(siteKeyOf(null), null);
+});
+
+test("buildRepoHistoryRows defaults a missing state and leaves a non-numeric elapsed_sec non-finite", () => {
+  const { buildRepoHistoryRows } = globalThis.RepoFilter;
+  const rows = buildRepoHistoryRows(
+    [record("2026-08-01T00:00:00Z", [{ url: "https://a.example/", name: "A", status_code: null, elapsed_sec: null, state: null }])],
+    "https://a.example/",
+  );
+  assert.equal(rows[0].state, "UNKNOWN");
+  assert.equal(Number.isFinite(rows[0].elapsedSec), false);
+});
+
 test("resolveCanonicalSites treats a success with empty results the same as a failure", () => {
   const { resolveCanonicalSites } = globalThis.RepoFilter;
   const sites = resolveCanonicalSites({
