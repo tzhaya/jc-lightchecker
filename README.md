@@ -11,12 +11,15 @@ JAIRO Cloud 上の機関リポジトリに対して、トップページへの�
 | `targets.yml` | 監視対象サイトの一覧 |
 | `scripts/check_jairo.py` | HTTP チェック本体 |
 | `scripts/analyze_history.py` | `docs/history.jsonl` の簡易集計 |
+| `scripts/verify_public_ogp.py` | 公開済みのリンクプレビュー用メタデータと画像の確認（手動実行） |
 | `.github/workflows/check.yml` | チェックを実行し、結果をコミットする GitHub Actions workflow |
 | `cloudflare-worker/` | GitHub Actions を定期起動する Cloudflare Worker |
 | `docs/latest.json` | 最新のチェック結果 |
 | `docs/history.jsonl` | チェック履歴 |
 | `docs/index.html` | GitHub Pages 向けの静的ダッシュボード |
+| `docs/ogp.png` | リンクプレビュー用の静的画像（1200×630） |
 | [`notes/notification_setup.md`](notes/notification_setup.md) | Slack、Teams、Discord の通知先設定 |
+| [`notes/jc-lightchecker.md`](notes/jc-lightchecker.md) | 初期の設計案（記録用。現行実装とは異なる） |
 
 ## 使い方
 
@@ -124,6 +127,22 @@ cd docs
 python -m http.server 8000
 ```
 
+## リンクプレビュー（OGP）
+
+トップページを SNS や Slack に貼ると、画像付きのカードが表示されます。
+
+- 画像 `docs/ogp.png` は**静的**です。一度作成したあとは書き換えません
+- 稼働状況は `og:description` と `twitter:description` に入ります。`scripts/check_jairo.py` がチェックのたびに `docs/index.html` のこの2箇所だけを書き換えるため、`docs/index.html` も結果と一緒にコミットされます
+- 書き換えは一時ファイルへ書いてから `os.replace` で差し替えます。途中で失敗しても `docs/index.html` は元のまま残り、チェック自体は成功します
+
+カードの表示内容は、**各プラットフォームがそのページを取得した時点**のものです。プラットフォーム側がキャッシュを管理しているため、投稿時点や閲覧時点の最新性は保証しません。古い投稿のカードが後から更新されることもあります。
+
+公開後の確認は次のスクリプトで行います。GitHub Pages の公開は非同期（最大10分程度）なので、待機と再試行を行います。定期チェックや CI には組み込みません。
+
+```bash
+python scripts/verify_public_ogp.py
+```
+
 その後、`http://localhost:8000/` をブラウザで開きます。
 
 ## GitHub Actions
@@ -132,7 +151,7 @@ python -m http.server 8000
 
 - Python 3.12 をセットアップ
 - `python scripts/check_jairo.py` を実行
-- `docs/latest.json` と `docs/history.jsonl` をコミット
+- `docs/latest.json`、`docs/history.jsonl`、`docs/index.html` をコミット
 - 変更がない場合はコミットせず終了
 
 現在、GitHub Actions 側には `schedule` は設定していません。定期実行は Cloudflare Worker から `workflow_dispatch` を呼び出す構成です。
@@ -195,6 +214,8 @@ GitHub Actionsが正常に起動すること、公開HTTPエンドポイント�
 
 ## 更新履歴
 
+- 2026-08-01: 初期の設計案 `jc-lightchecker.md` を `notes/` へ移し、現行実装と異なる旨（`schedule` 廃止など）を冒頭に明記した。
+- 2026-08-01: SNS や Slack のリンクプレビュー向けに OGP / X Card のメタデータと静的画像 `docs/ogp.png` を追加。稼働状況は description のみを動的に書き換える方式とし、画像は書き換えない（可変な画像を毎回コミットすると Git 履歴が単調増加し、`git gc` では回収できないため）。あわせて `docs/latest.json`、`docs/history.jsonl`、`docs/index.html` の書き込みを一時ファイル経由の原子的置換に変更した。
 - 2026-08-01: 応答時間グラフのマーカーを、SERVER_ERROR / TIMEOUT / UNKNOWN の点だけ円から × に変更。5xx応答は正常応答と同等かそれ以下の応答時間で記録されるため、色（リポジトリ識別用）に頼らず形状でエラーを識別できるようにした。
 - 2026-08-01: ダッシュボードに個別リポジトリへの絞り込み表示と、絞り込みに連動する期間内チェック履歴テーブルを追加。グラフの配色を、対象が増えると色が衝突しうる6色の巡回方式から、リポジトリごとに固定される検証済み8色パレットに置き換えた。
 - 2026-07-18: `docs/history.jsonl` の保持期間を14日に制限し、`HISTORY_RETENTION_DAYS` でフォーク側から設定できるようにした。ダッシュボードの期間選択から `30d` を削除し、`12h`/`24h`/`7d`/`all` の固定4択にした。

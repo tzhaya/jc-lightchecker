@@ -91,6 +91,32 @@ test("uses external assets with a CSP that forbids inline code", () => {
   assert.match(styles, /\.recent-errors\s*\{[^}]*border-left:\s*8px solid var\(--error\)/s);
 });
 
+test("declares a social card whose og: and twitter: tags agree", () => {
+  const html = readFileSync(join(__dirname, "..", "docs", "index.html"), "utf8");
+  const meta = (marker) => {
+    const match = new RegExp(`<meta ${marker} content="([^"]*)">`).exec(html);
+    return match && match[1];
+  };
+
+  // Crawlers do not resolve relative paths, so both image tags must be absolute.
+  for (const marker of ['property="og:image"', 'name="twitter:image"']) {
+    assert.match(meta(marker), /^https:\/\/tzhaya\.github\.io\/jc-lightchecker\/ogp\.png$/);
+  }
+  assert.equal(meta('property="og:url"'), "https://tzhaya.github.io/jc-lightchecker/");
+  assert.equal(meta('name="twitter:card"'), "summary_large_image");
+
+  // check_jairo.py rewrites both descriptions together; they must start in sync
+  // and must always carry the disclaimer, because the card is often all anyone
+  // sees of the page.
+  const description = meta('property="og:description"');
+  assert.equal(meta('name="twitter:description"'), description);
+  assert.match(description, /非公式・個人運用のダッシュボードです。/);
+
+  // The titles are deliberately static -- nothing rewrites them.
+  assert.equal(meta('name="twitter:title"'), meta('property="og:title"'));
+  assert.equal(meta('name="twitter:image:alt"'), meta('property="og:image:alt"'));
+});
+
 test("chart series colors and legend swatches stay in sync", () => {
   // The palette is necessarily duplicated: app.js paints SVG strokes, styles.css
   // paints legend swatches (inline style is forbidden by the CSP above). Editing
