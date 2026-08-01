@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import socket
 import time
 from datetime import datetime, timedelta, timezone
+from html import escape as html_escape
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -17,6 +19,7 @@ TARGETS_FILE = ROOT / "targets.yml"
 OUTPUT_DIR = ROOT / "docs"
 LATEST_FILE = OUTPUT_DIR / "latest.json"
 HISTORY_FILE = OUTPUT_DIR / "history.jsonl"
+INDEX_FILE = OUTPUT_DIR / "index.html"
 
 TIMEOUT_SEC = 20
 SLOW_SEC = 5
@@ -25,6 +28,21 @@ HISTORY_RETENTION_DAYS = int(os.environ.get("HISTORY_RETENTION_DAYS", "14"))
 
 USER_AGENT = "jc-lightchecker/0.1 (+https://github.com/tzhaya/jc-lightchecker)"
 STATES = ("OK", "SLOW", "VERY_SLOW", "SERVER_ERROR", "TIMEOUT", "UNKNOWN")
+
+# Shown in the social card so that anyone who only sees the unfurl -- and never
+# opens the page -- still gets the disclaimer the intro section carries.
+DISCLAIMER = "非公式・個人運用のダッシュボードです。"
+STATE_LABELS = {
+    "OK": "OK",
+    "SLOW": "遅延",
+    "VERY_SLOW": "高遅延",
+    "SERVER_ERROR": "サーバーエラー",
+    "TIMEOUT": "タイムアウト",
+    "UNKNOWN": "不明",
+}
+# Only the description tags are rewritten. Titles stay static so that the
+# og:*/twitter:* pairs asserted by the browser tests can never drift apart.
+DESCRIPTION_META_MARKERS = ('property="og:description"', 'name="twitter:description"')
 
 
 def classify(status_code: int | None, elapsed_sec: float | None, error_type: str | None) -> str:
@@ -205,6 +223,67 @@ def build_latest(targets: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def write_text_atomic(path: Path, text: str) -> None:
+    """Replace `path` with `text`, never leaving a truncated file behind.
+
+    Opening the destination with "w" truncates it before a single byte of the
+    new content is written, so an I/O error part-way through would destroy the
+    file even though the caller catches the exception. Writing a sibling
+    temporary file and renaming it means the destination only ever holds
+    complete content. `os.replace` is atomic on the same volume on both POSIX
+    and Windows.
+
+    `newline=""` keeps the caller's line endings verbatim so that callers that
+    round-trip an existing file change only the bytes they meant to change.
+    """
+    tmp = path.with_name(path.name + ".tmp")
+    try:
+        with tmp.open("w", encoding="utf-8", newline="") as f:
+            f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
+    except Exception:
+        tmp.unlink(missing_ok=True)
+        raise
+
+
+def format_status_description(latest: dict[str, Any]) -> str:
+    summary = latest.get("summary") or {}
+    counts = summary.get("counts") or {}
+    parts = [f"{STATE_LABELS[state]} {counts[state]}" for state in STATES if counts.get(state)]
+    status = " / ".join(parts) if parts else str(summary.get("message", "")).strip()
+
+    checked_at = str(latest.get("checked_at", ""))
+    try:
+        stamp = datetime.fromisoformat(checked_at).strftime("%Y-%m-%d %H:%M")
+    except ValueError:
+        stamp = checked_at
+
+    prefix = f"{status} — " if status else ""
+    return f"{prefix}{stamp} 時点。{DISCLAIMER}"
+
+
+def update_index_metadata(latest: dict[str, Any]) -> None:
+    """Refresh the og:/twitter: description tags with the current status."""
+    # newline="" on both read and write so the untouched parts of the file keep
+    # their original line endings byte-for-byte.
+    with INDEX_FILE.open("r", encoding="utf-8", newline="") as f:
+        markup = f.read()
+    value = html_escape(format_status_description(latest), quote=True)
+
+    for marker in DESCRIPTION_META_MARKERS:
+        pattern = re.compile(r'(<meta ' + re.escape(marker) + r' content=")[^"]*(">)')
+        markup, replaced = pattern.subn(lambda m: m.group(1) + value + m.group(2), markup)
+        if replaced != 1:
+            # Refuse to write a partially updated file: if the tag has drifted,
+            # leaving index.html untouched is better than updating one of the
+            # pair. write_outputs swallows this and the next run retries.
+            raise ValueError(f"expected exactly one {marker} meta tag, found {replaced}")
+
+    write_text_atomic(INDEX_FILE, markup)
+
+
 def prune_history(retention_days: int) -> None:
     if not HISTORY_FILE.exists():
         return
@@ -225,18 +304,14 @@ def prune_history(retention_days: int) -> None:
             if checked_at >= cutoff:
                 kept_lines.append(line)
 
-    with HISTORY_FILE.open("w", encoding="utf-8") as f:
-        for line in kept_lines:
-            f.write(line + "\n")
+    write_text_atomic(HISTORY_FILE, "".join(line + "\n" for line in kept_lines))
 
 
 def write_outputs(latest: dict[str, Any]) -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    with LATEST_FILE.open("w", encoding="utf-8") as f:
-        json.dump(latest, f, ensure_ascii=False, indent=2)
-        f.write("\n")
+    write_text_atomic(LATEST_FILE, json.dumps(latest, ensure_ascii=False, indent=2) + "\n")
 
-    with HISTORY_FILE.open("a", encoding="utf-8") as f:
+    with HISTORY_FILE.open("a", encoding="utf-8", newline="") as f:
         f.write(json.dumps(latest, ensure_ascii=False, separators=(",", ":")) + "\n")
 
     try:
@@ -244,6 +319,15 @@ def write_outputs(latest: dict[str, Any]) -> None:
     except Exception:
         # Best-effort: a pruning failure must not block the check itself from
         # succeeding. The next run will retry.
+        pass
+
+    try:
+        update_index_metadata(latest)
+    except Exception:
+        # Same best-effort contract as pruning. write_text_atomic guarantees a
+        # failure here leaves the published index.html intact, which matters
+        # more than for the outputs above: index.html is hand-maintained source
+        # with nothing to regenerate it from.
         pass
 
 

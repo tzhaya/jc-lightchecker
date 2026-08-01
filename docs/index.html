@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
     <title>JC Light Checker</title>
+
+    <!-- Social card. The image is static; only the description pair is rewritten
+         by scripts/check_jairo.py on every check. Absolute HTTPS URLs are
+         required: crawlers do not resolve relative paths. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="JC Light Checker">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:url" content="https://tzhaya.github.io/jc-lightchecker/">
+    <meta property="og:title" content="JC Light Checker — JAIRO Cloud 機関リポジトリ稼働状況">
+    <meta property="og:description" content="複数の機関リポジトリ等の稼働状況を15分おきに確認しています。非公式・個人運用のダッシュボードです。">
+    <meta property="og:image" content="https://tzhaya.github.io/jc-lightchecker/ogp.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="JC Light Checker — JAIRO Cloud 機関リポジトリの稼働確認ダッシュボード">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="JC Light Checker — JAIRO Cloud 機関リポジトリ稼働状況">
+    <meta name="twitter:description" content="複数の機関リポジトリ等の稼働状況を15分おきに確認しています。非公式・個人運用のダッシュボードです。">
+    <meta name="twitter:image" content="https://tzhaya.github.io/jc-lightchecker/ogp.png">
+    <meta name="twitter:image:alt" content="JC Light Checker — JAIRO Cloud 機関リポジトリの稼働確認ダッシュボード">
+
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
