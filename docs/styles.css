@@ -286,6 +286,12 @@ h1 {
 .legend-swatch--7 { background: #e34948; }
 .legend-swatch--fallback { background: #595959; }
 
+.chart-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
 .history-stats {
   display: grid;
   grid-template-columns: repeat(5, minmax(110px, 1fr));
