@@ -90,3 +90,22 @@ test("uses external assets with a CSP that forbids inline code", () => {
   assert.match(styles, /--primary:\s*#0017c1/);
   assert.match(styles, /\.recent-errors\s*\{[^}]*border-left:\s*8px solid var\(--error\)/s);
 });
+
+test("chart series colors and legend swatches stay in sync", () => {
+  // The palette is necessarily duplicated: app.js paints SVG strokes, styles.css
+  // paints legend swatches (inline style is forbidden by the CSP above). Editing
+  // one without the other makes a repository's line and its legend key disagree.
+  const app = readFileSync(join(__dirname, "..", "docs", "app.js"), "utf8");
+  const styles = readFileSync(join(__dirname, "..", "docs", "styles.css"), "utf8");
+
+  const seriesColors = /const seriesColors = \[([^\]]*)\]/.exec(app)[1]
+    .split(",").map((value) => value.trim().replace(/^"|"$/g, ""));
+  const swatchColors = [...styles.matchAll(/\.legend-swatch--(\d+)\s*\{\s*background:\s*(#[0-9a-f]{6});/g)]
+    .sort((a, b) => Number(a[1]) - Number(b[1])).map((match) => match[2]);
+
+  assert.equal(seriesColors.length, 8);
+  assert.deepEqual(swatchColors, seriesColors);
+
+  const fallback = /const FALLBACK_COLOR = "(#[0-9a-f]{6})"/.exec(app)[1];
+  assert.match(styles, new RegExp(`\\.legend-swatch--fallback\\s*\\{\\s*background:\\s*${fallback};`));
+});

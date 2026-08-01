@@ -8,6 +8,10 @@ const chartWrapEl = document.querySelector("#chartWrap");
 const chartLegendEl = document.querySelector("#chartLegend");
 const historyStatsEl = document.querySelector("#historyStats");
 const rangeControlsEl = document.querySelector("#rangeControls");
+const repoFilterEl = document.querySelector("#repoFilter");
+const repoHistoryEl = document.querySelector("#repoHistory");
+const repoHistoryTitleEl = document.querySelector("#repoHistoryTitle");
+const repoHistoryResultsEl = document.querySelector("#repoHistoryResults");
 const recentErrorsEl = document.querySelector("#recentErrors");
 const recentErrorsDetailsEl = document.querySelector("#recentErrorsDetails");
 const recentErrorsCountEl = document.querySelector("#recentErrorsCount");
@@ -18,9 +22,21 @@ const ranges = {
   "7d": 7 * 24 * 60 * 60 * 1000,
   all: null,
 };
-const seriesColors = ["#1a5fb4", "#16845b", "#b64f0a", "#7b3f98", "#007d8a", "#b04566"];
+// Validated categorical palette (dataviz skill reference instance). Slots 3/4/5
+// (aqua/yellow/magenta) are darkened from the skill's documented default so all
+// 8 clear 3:1 contrast on this dashboard's actual surfaces (#fbfcfe chart /
+// #ffffff legend) -- see issue #32. Assignment is identity-based (colorForKey
+// in repo-filter.js), never cycled: a 9th registered target gets FALLBACK_COLOR
+// rather than repeating an earlier slot's hue.
+const seriesColors = ["#2a78d6", "#eb6834", "#1aa674", "#c48500", "#e46595", "#008300", "#4a3aa7", "#e34948"];
+const FALLBACK_COLOR = "#595959";
 let historyRecords = [];
 let activeRange = "12h";
+let canonicalSites = null;
+let latestStatus = "pending";
+let latestResults = [];
+let historyStatus = "pending";
+let activeRepoKey = readRepoKeyFromHash();
 
 function text(value, fallback = "-") {
   return value === null || value === undefined || value === "" ? fallback : String(value);
@@ -64,6 +80,23 @@ function percentile(values, percent) {
   const upper = Math.min(lower + 1, ordered.length - 1);
   const weight = index - lower;
   return ordered[lower] * (1 - weight) + ordered[upper] * weight;
+}
+
+function readRepoKeyFromHash() {
+  const match = /^#repo=(.+)$/.exec(location.hash);
+  if (!match) {
+    return "all";
+  }
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return "all";
+  }
+}
+
+function writeRepoKeyToHash(key) {
+  const hash = key && key !== "all" ? `#repo=${encodeURIComponent(key)}` : "";
+  history.replaceState(null, "", location.pathname + location.search + hash);
 }
 
 function renderCounts(counts = {}) {
@@ -164,11 +197,15 @@ function buildSeries(records) {
       });
     }
   }
-  return [...sites.values()].map((site, index) => ({
-    ...site,
-    color: seriesColors[index % seriesColors.length],
-    points: site.points.sort((a, b) => a.time - b.time),
-  }));
+  return [...sites.values()].map((site) => {
+    const { color, paletteIndex } = RepoFilter.colorForKey(canonicalSites, site.key, seriesColors, FALLBACK_COLOR);
+    return {
+      ...site,
+      color,
+      paletteIndex,
+      points: site.points.sort((a, b) => a.time - b.time),
+    };
+  });
 }
 
 function renderRecentErrors() {
@@ -195,7 +232,7 @@ function renderRecentErrors() {
 
 function renderHistory() {
   const records = getFilteredHistory();
-  const series = buildSeries(records);
+  const series = RepoFilter.filterSeriesByRepo(buildSeries(records), activeRepoKey);
   const values = series.flatMap((site) => site.points.map((point) => point.elapsed).filter(Number.isFinite));
   const latestRecord = historyRecords[historyRecords.length - 1] || {};
   const slowSec = Number(latestRecord.thresholds?.slow_sec || 5);
@@ -267,12 +304,15 @@ function renderHistory() {
     </svg>
   `;
 
-  chartLegendEl.innerHTML = series.map((site, index) => `
+  // Filtering to one repository names it in the table heading below, so the
+  // legend would just repeat it. Unfiltered, every line needs its label -- even
+  // when the range happens to leave only one site with samples.
+  chartLegendEl.innerHTML = activeRepoKey === "all" ? series.map((site) => `
     <span class="legend-item">
-      <span class="legend-swatch legend-swatch--${index % seriesColors.length}"></span>
+      <span class="legend-swatch legend-swatch--${site.paletteIndex ?? "fallback"}"></span>
       ${escapeHtml(site.name)}
     </span>
-  `).join("");
+  `).join("") : "";
   renderHistoryStats(values, records, series, slowSec);
 }
 
@@ -301,6 +341,86 @@ function renderHistoryError(message) {
   renderHistoryStats([]);
 }
 
+function populateRepoFilterOptions() {
+  const options = ['<option value="all">すべて表示</option>'].concat(
+    canonicalSites.map((site) => `<option value="${escapeAttr(site.key)}">${escapeHtml(site.name)}</option>`)
+  );
+  repoFilterEl.innerHTML = options.join("");
+  repoFilterEl.value = activeRepoKey;
+  repoFilterEl.disabled = false;
+}
+
+// Freezes canonicalSites (and the repo filter's options) at most once, from
+// whichever fetch settles first with a usable site list. No-op once frozen:
+// colors and the option list must never change after first shown, so a
+// repository's color stays constant across a visit (see issue #32).
+function tryFreezeCanonicalSites() {
+  if (canonicalSites !== null) {
+    return;
+  }
+  const resolved = RepoFilter.resolveCanonicalSites({ latestStatus, latestResults, historyRecords });
+  if (resolved === null) {
+    return;
+  }
+  canonicalSites = resolved;
+  activeRepoKey = RepoFilter.resolveActiveRepoKey(activeRepoKey, canonicalSites);
+  populateRepoFilterOptions();
+  writeRepoKeyToHash(activeRepoKey);
+}
+
+// The single entry point for (re)drawing the history panel: called after every
+// latest.json / history.jsonl settle in any order, and from the filter controls.
+// Attempts the one-time freeze above, then decides what to show right now.
+function renderIfReady() {
+  tryFreezeCanonicalSites();
+  if (historyStatus === "failed") {
+    renderHistoryError("history.jsonl could not be loaded");
+    recentErrorsEl.hidden = true;
+    return;
+  }
+  if (historyStatus === "pending") {
+    return;
+  }
+  if (canonicalSites === null) {
+    // Colors are keyed to the canonical order, so while latest.json could still
+    // arrive with one, wait rather than paint a provisional palette. Once it has
+    // settled too, no source carries any site at all — fall through and let
+    // renderHistory show its empty state instead of a stuck placeholder.
+    if (latestStatus === "pending") {
+      return;
+    }
+    activeRepoKey = RepoFilter.resolveActiveRepoKey(activeRepoKey, canonicalSites);
+  }
+  renderHistory();
+  renderRepoHistory();
+}
+
+function renderRepoHistory() {
+  if (activeRepoKey === "all") {
+    repoHistoryEl.hidden = true;
+    repoHistoryResultsEl.innerHTML = "";
+    return;
+  }
+  const rows = RepoFilter.buildRepoHistoryRows(getFilteredHistory(), activeRepoKey);
+  const site = (canonicalSites || []).find((entry) => entry.key === activeRepoKey);
+  const siteName = site ? site.name : activeRepoKey;
+
+  repoHistoryTitleEl.textContent = `${siteName} のチェック履歴（${rows.length}件のチェック）`;
+  repoHistoryResultsEl.innerHTML = rows.length ? rows.map((row) => {
+    const elapsed = Number.isFinite(row.elapsedSec) ? `${row.elapsedSec.toFixed(3)} sec` : "-";
+    return `
+      <tr>
+        <td><time datetime="${new Date(row.checkedAt).toISOString()}">${escapeHtml(formatDateTime(row.checkedAt))}</time></td>
+        <td>${escapeHtml(row.statusCode)}</td>
+        <td>${elapsed}</td>
+        <td><span class="badge ${escapeAttr(row.state)}">${escapeHtml(row.state)}</span></td>
+        <td>${escapeHtml(row.error)}</td>
+      </tr>
+    `;
+  }).join("") : '<tr><td colspan="5" class="empty">この期間のチェック記録がありません。</td></tr>';
+  repoHistoryEl.hidden = false;
+}
+
 rangeControlsEl.addEventListener("click", (event) => {
   const button = event.target.closest("[data-range]");
   if (!button) {
@@ -310,7 +430,13 @@ rangeControlsEl.addEventListener("click", (event) => {
   for (const rangeButton of rangeControlsEl.querySelectorAll("[data-range]")) {
     rangeButton.setAttribute("aria-pressed", String(rangeButton === button));
   }
-  renderHistory();
+  renderIfReady();
+});
+
+repoFilterEl.addEventListener("change", () => {
+  activeRepoKey = repoFilterEl.value;
+  writeRepoKeyToHash(activeRepoKey);
+  renderIfReady();
 });
 
 fetch("latest.json", { cache: "no-store" })
@@ -320,8 +446,17 @@ fetch("latest.json", { cache: "no-store" })
     }
     return response.json();
   })
-  .then(renderLatest)
-  .catch(() => renderError("latest.json could not be loaded"));
+  .then((latest) => {
+    renderLatest(latest);
+    latestStatus = "success";
+    latestResults = Array.isArray(latest.results) ? latest.results : [];
+    renderIfReady();
+  })
+  .catch(() => {
+    renderError("latest.json could not be loaded");
+    latestStatus = "failed";
+    renderIfReady();
+  });
 
 fetch("history.jsonl", { cache: "no-store" })
   .then((response) => {
@@ -332,10 +467,11 @@ fetch("history.jsonl", { cache: "no-store" })
   })
   .then((jsonl) => {
     historyRecords = parseHistory(jsonl);
-    renderHistory();
+    historyStatus = "success";
     renderRecentErrors();
+    renderIfReady();
   })
   .catch(() => {
-    renderHistoryError("history.jsonl could not be loaded");
-    recentErrorsEl.hidden = true;
+    historyStatus = "failed";
+    renderIfReady();
   });
