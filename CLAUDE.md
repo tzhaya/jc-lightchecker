@@ -54,13 +54,13 @@ Python コードは**標準ライブラリのみ**を使う（`requirements.txt`
 - **`scripts/check_jairo.py`** が中核。テストと CI が依存する、意図的な挙動に注意:
   - **異常終了しない**。全面的な失敗時でも、有効な `latest.json`/`history.jsonl` レコード（`level: UNKNOWN`）を書き出し、ダッシュボードが常にデータを持てるようにしている。
   - `targets.yml` は PyYAML ではなく**自前の最小パーサ**（`load_targets`）で解析する。理解できるのは `name`/`url`/`primary` のフラットなリスト構造だけで、複雑な YAML は壊れる。各対象 URL は HTTPS であることを検証し、そうでなければ拒否する。
-  - **ファイル出力はすべて `write_text_atomic`（一時ファイル + `os.replace`）を通す。追記モード（`open(path, "a")`）も使わない。** `open(path, "w")` は開いた時点で truncate するため、途中で失敗すると例外を捕捉しても公開ファイルが壊れる。追記も中断されれば部分行が残り、`docs/app.js` は `history.jsonl` を1行ずつパースするため壊れる。特に `docs/index.html` は手で保守しているソースであり、再生成する元がない。
-  - `write_outputs` は `append_history` を呼ぶ。これは既存行の刈り込みと新レコードの追加を**1回の置換にまとめて**行い、`HISTORY_RETENTION_DAYS`（環境変数、デフォルト14日。`check.yml` では `vars.HISTORY_RETENTION_DAYS` で上書き可能）より古い行を落とす。例外はすべて捕捉し、失敗時は当該回をスキップする（1サンプルを失う方が、実行を失敗させるよりよい）。
-  - `write_outputs` の中で `latest.json` の書き込み**だけ**は保護しない。これが書けなければダッシュボードに出すものが無く、実行が失敗として見えるべきだからである。それ以降（履歴、`index.html`）は `latest.json` が既に書けている前提なので best-effort でよい。この非対称は意図的なもの。
-  - `write_outputs` は続けて `update_index_metadata` を呼び、`docs/index.html` の `og:description` と `twitter:description` の `content` 属性**だけ**を現在の状態で書き換える。title 系は静的で、書き換えない。`prune_history` と同様に例外はすべて捕捉し、失敗時は当該回をスキップする。該当タグがちょうど1つ見つからなければ書き込まず `ValueError` を投げる（片方だけ更新された HTML を出さないため）。
+  - **ファイル出力はすべて `write_text_atomic`（一時ファイルへ書いてから `os.replace` で差し替える）を通す。追記モード（`open(path, "a")`）も使わない。** `open(path, "w")` はファイルを開いた時点で中身を空にするため、書き込みの途中で失敗すると、例外を捕まえても公開中のファイルが壊れたまま残る。追記も、途中で中断されれば行の断片が残る。`docs/app.js` は `history.jsonl` を1行ずつ読むので、これも壊れる。特に `docs/index.html` は手で保守しているソースで、作り直す元がない。
+  - `write_outputs` は `append_history` を呼ぶ。これは、古い行を落とすことと新しいレコードを足すことを**1回の書き換えでまとめて**行う。保持期間は `HISTORY_RETENTION_DAYS`（環境変数、デフォルト14日。`check.yml` では `vars.HISTORY_RETENTION_DAYS` で上書き可能）。例外はすべて捕まえ、失敗した回は書き込みを行わない（1回分のサンプルを失う方が、実行そのものを失敗させるよりよい）。
+  - `write_outputs` の中で `latest.json` の書き込み**だけ**は例外を捕まえない。これが書けなければダッシュボードに表示するものが無く、実行は失敗として見えるべきだからである。それ以降（履歴、`index.html`）は `latest.json` が書けた後なので、失敗しても実行は成功のままでよい。この扱いの違いは意図したもの。
+  - `write_outputs` は続けて `update_index_metadata` を呼び、`docs/index.html` の `og:description` と `twitter:description` の `content` 属性**だけ**を現在の状態で書き換える。title 系は書き換えない。ここでも例外はすべて捕まえ、失敗した回は書き込みを行わない。該当するタグがちょうど1つ見つからない場合は、何も書かずに `ValueError` を投げる（片方だけ更新された HTML を公開しないため）。
   - 状態分類（`classify`）と、サイト横断の総合判定ロジック（`summarize`）が最も慎重を要する部分。しきい値は `SLOW=5秒`、`VERY_SLOW=15秒`、`TIMEOUT=20秒`。タイムスタンプは JST。
 
-- **`scripts/verify_public_ogp.py`** は公開済み URL に対するリリース時のゲート。**`check_jairo.py` とは失敗時の意味論が逆で、問題を見つけたら理由を出力して非 0 で終了する。** 既存コードの「異常終了しない」パターンをここへ持ち込まないこと。`check.yml` からも `ci.yml` からも呼ばない（検証対象は Pages デプロイの性質であって毎回のチェック結果ではなく、Pages の公開は非同期で最大10分かかるため）。リクエスト単位の timeout と全体の deadline / 試行回数上限を両方定数で持つ。`DISCLAIMER` は `check_jairo` と重複定義しており、`tests/test_verify_public_ogp.py` が両者の一致を固定している。
+- **`scripts/verify_public_ogp.py`** は、公開済みの URL を確認するリリース時のゲート。**`check_jairo.py` とは失敗したときの振る舞いが逆で、問題を見つけたら理由を表示して終了コード 1 で終わる。** 「異常終了しない」という既存コードの書き方をここへ持ち込まないこと。`check.yml` からも `ci.yml` からも呼ばない（確認しているのは Pages が正しいものを配信しているかどうかであって、毎回のチェック結果ではない。加えて Pages の公開は非同期で最大10分かかる）。1回のリクエストの制限時間と、全体の制限時間・試行回数の上限を、いずれも定数で持つ。`DISCLAIMER` は `check_jairo` と同じ文字列を二重に定義しており、`tests/test_verify_public_ogp.py` が両者の一致を固定している。
 
 - **`docs/` ダッシュボード**は静的で**ビルド工程なし**。厳格な CSP（`index.html` の meta タグ）がインラインの script と style を禁止しており、`tests/recent-errors.test.js` がこれをアサートする。よって JS はすべて `.js`、CSS はすべて `styles.css` に置き、`<style>`・インライン `<script>`・`style=` 属性は使わないこと。同テストはデザイントークン（例: `--primary: #0017c1`、デジタル庁デザインシステム由来のテーマ）やレイアウト規則も固定しているため、テーマ変更前に必ず確認する。デザインの参照は `~/.claude/skills/dads/`（Skill としてインストール済みの場合、自動的に参照される）または https://design.digital.go.jp/dads/ を直接参照する。モデルの事前学習知識だけで配色・トークン値を断定しないこと。
   - `docs/recent-errors.js` と `docs/repo-filter.js` はいずれも IIFE で `globalThis.RecentErrors` / `globalThis.RepoFilter` を公開し、ブラウザと Node のテストランナーの両方で同一ファイルが無改変で動くようにしている。HTTPS 限定のリンク検証（`safeHttpsUrl`）は Python 側の HTTPS チェックと対応している。
@@ -71,4 +71,4 @@ Python コードは**標準ライブラリのみ**を使う（`requirements.txt`
 
 - **GitHub Actions**: `check.yml` は `workflow_dispatch` 専用（`schedule` なし — 実行間隔は Worker cron が制御）で、`docs/latest.json`・`docs/history.jsonl`・`docs/index.html` の変更をリポジトリへコミットする。`ci.yml` は PR と main への push で 3 系統のテストに加え `wrangler deploy --dry-run` を実行する。
 
-- **GitHub Pages** は `main` ブランチの `/docs` から配信する branch デプロイ（`build_type: legacy`）。`docs/` に置いたものがそのまま公開される。Actions デプロイには**していない** — 可変な画像を配信する必要がなくなったため（判断の経緯は issue #36）。`docs/ogp.png` は静的で、一度コミットしたあとは書き換えない。書き換えるとコミットのたびに blob が git 履歴へ蓄積し、到達可能であるため `git gc` では回収できない。
+- **GitHub Pages** は `main` ブランチの `/docs` から配信する branch デプロイ（`build_type: legacy`）。`docs/` に置いたものがそのまま公開される。Actions デプロイには**していない** — 可変な画像を配信する必要がなくなったため（判断の経緯は issue #36）。`docs/ogp.png` は静的で、一度コミットしたあとは書き換えない。書き換えると、コミットのたびに古い画像が git 履歴へ積み上がる。履歴のコミットから参照され続けるため `git gc` では消せず、履歴を書き換える以外に減らす手段がなくなる。
