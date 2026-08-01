@@ -272,15 +272,17 @@ function renderHistory() {
     const path = finitePoints
       .map((point, index) => `${index === 0 ? "M" : "L"} ${x(point.time).toFixed(1)} ${y(point.elapsed).toFixed(1)}`)
       .join(" ");
-    const circles = finitePoints.map((point) => `
-      <circle cx="${x(point.time).toFixed(1)}" cy="${y(point.elapsed).toFixed(1)}" r="3.2" fill="${site.color}">
-        <title>${escapeHtml(`${site.name}: ${formatSeconds(point.elapsed)} (${point.state})\n日時: ${formatDateTime(point.time)}`)}</title>
-      </circle>
-    `).join("");
+    const markers = finitePoints.map((point) => ChartMarkers.markerMarkup({
+      state: point.state,
+      cx: x(point.time),
+      cy: y(point.elapsed),
+      color: site.color,
+      titleHtml: escapeHtml(`${site.name}: ${formatSeconds(point.elapsed)} (${point.state})\n日時: ${formatDateTime(point.time)}`),
+    })).join("");
 
     return `
       <path d="${path}" fill="none" stroke="${site.color}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"></path>
-      ${circles}
+      ${markers}
     `;
   }).join("");
 
