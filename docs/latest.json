@@ -1,20 +1,20 @@
 {
-  "checked_at": "2026-08-02T07:22:49+09:00",
+  "checked_at": "2026-08-02T07:37:46+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "SERVER_ERROR",
-    "message": "複数サイトでサーバーエラーまたはタイムアウトを確認しました。広域的事象の可能性があります。",
+    "level": "VERY_SLOW",
+    "message": "複数サイトで応答遅延または異常を確認しました。広域的遅延の可能性があります。",
     "counts": {
-      "OK": 4,
+      "OK": 2,
       "SLOW": 0,
       "VERY_SLOW": 0,
-      "SERVER_ERROR": 3,
+      "SERVER_ERROR": 0,
       "TIMEOUT": 0,
-      "UNKNOWN": 0
+      "UNKNOWN": 5
     },
     "total": 7,
     "primary_state": null
@@ -24,58 +24,58 @@
       "name": "国際農研機関リポジトリ",
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 2.035,
-      "state": "OK",
+      "status_code": 400,
+      "elapsed_sec": 0.476,
+      "state": "UNKNOWN",
       "error_type": null,
-      "error": null
+      "error": "HTTP 400: Bad Request"
     },
     {
       "name": "農研機構機関リポジトリ",
       "url": "https://repository.naro.go.jp/",
       "primary": false,
-      "status_code": 502,
-      "elapsed_sec": 0.621,
-      "state": "SERVER_ERROR",
+      "status_code": 400,
+      "elapsed_sec": 0.661,
+      "state": "UNKNOWN",
       "error_type": null,
-      "error": "HTTP 502: Bad Gateway"
+      "error": "HTTP 400: Bad Request"
     },
     {
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": 502,
-      "elapsed_sec": 0.607,
-      "state": "SERVER_ERROR",
+      "status_code": 400,
+      "elapsed_sec": 0.342,
+      "state": "UNKNOWN",
       "error_type": null,
-      "error": "HTTP 502: Bad Gateway"
+      "error": "HTTP 400: Bad Request"
     },
     {
       "name": "情報学広場",
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
-      "status_code": 502,
-      "elapsed_sec": 0.585,
-      "state": "SERVER_ERROR",
+      "status_code": 400,
+      "elapsed_sec": 0.88,
+      "state": "UNKNOWN",
       "error_type": null,
-      "error": "HTTP 502: Bad Gateway"
+      "error": "HTTP 400: Bad Request"
     },
     {
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 0.781,
-      "state": "OK",
+      "status_code": 403,
+      "elapsed_sec": 0.468,
+      "state": "UNKNOWN",
       "error_type": null,
-      "error": null
+      "error": "HTTP 403: Forbidden"
     },
     {
       "name": "IRDB(参考)",
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.388,
+      "elapsed_sec": 1.199,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.403,
+      "elapsed_sec": 0.697,
       "state": "OK",
       "error_type": null,
       "error": null
