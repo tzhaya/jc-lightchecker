@@ -1,16 +1,16 @@
 {
-  "checked_at": "2026-08-12T20:22:54+09:00",
+  "checked_at": "2026-08-12T20:37:49+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "SLOW",
-    "message": "一部サイトで応答遅延または異常を確認しました。",
+    "level": "OK",
+    "message": "大きな異常は確認されていません。",
     "counts": {
-      "OK": 6,
-      "SLOW": 1,
+      "OK": 7,
+      "SLOW": 0,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.905,
+      "elapsed_sec": 1.718,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.918,
+      "elapsed_sec": 1.201,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.895,
+      "elapsed_sec": 0.985,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -55,7 +55,7 @@
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.405,
+      "elapsed_sec": 1.451,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -65,8 +65,8 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 12.074,
-      "state": "SLOW",
+      "elapsed_sec": 0.787,
+      "state": "OK",
       "error_type": null,
       "error": null
     },
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.872,
+      "elapsed_sec": 1.216,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.732,
+      "elapsed_sec": 1.104,
       "state": "OK",
       "error_type": null,
       "error": null
