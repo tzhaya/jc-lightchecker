@@ -1,20 +1,20 @@
 {
-  "checked_at": "2026-08-17T11:52:43+09:00",
+  "checked_at": "2026-08-17T12:07:44+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "SLOW",
-    "message": "一部サイトで応答遅延または異常を確認しました。",
+    "level": "OK",
+    "message": "大きな異常は確認されていません。",
     "counts": {
-      "OK": 4,
+      "OK": 7,
       "SLOW": 0,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
-      "UNKNOWN": 3
+      "UNKNOWN": 0
     },
     "total": 7,
     "primary_state": null
@@ -24,18 +24,18 @@
       "name": "国際農研機関リポジトリ",
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": 400,
-      "elapsed_sec": 0.375,
-      "state": "UNKNOWN",
+      "status_code": 200,
+      "elapsed_sec": 2.329,
+      "state": "OK",
       "error_type": null,
-      "error": "HTTP 400: Bad Request"
+      "error": null
     },
     {
       "name": "農研機構機関リポジトリ",
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.134,
+      "elapsed_sec": 1.543,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -44,28 +44,28 @@
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": 400,
-      "elapsed_sec": 0.356,
-      "state": "UNKNOWN",
+      "status_code": 200,
+      "elapsed_sec": 1.105,
+      "state": "OK",
       "error_type": null,
-      "error": "HTTP 400: Bad Request"
+      "error": null
     },
     {
       "name": "情報学広場",
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
-      "status_code": 400,
-      "elapsed_sec": 0.465,
-      "state": "UNKNOWN",
+      "status_code": 200,
+      "elapsed_sec": 1.858,
+      "state": "OK",
       "error_type": null,
-      "error": "HTTP 400: Bad Request"
+      "error": null
     },
     {
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.87,
+      "elapsed_sec": 0.951,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.48,
+      "elapsed_sec": 2.094,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.284,
+      "elapsed_sec": 0.877,
       "state": "OK",
       "error_type": null,
       "error": null
