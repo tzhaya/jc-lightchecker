@@ -1,19 +1,19 @@
 {
-  "checked_at": "2026-08-21T07:22:56+09:00",
+  "checked_at": "2026-08-21T07:37:58+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "SLOW",
-    "message": "一部サイトで応答遅延または異常を確認しました。",
+    "level": "OK",
+    "message": "大きな異常は確認されていません。",
     "counts": {
-      "OK": 6,
+      "OK": 7,
       "SLOW": 0,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
-      "TIMEOUT": 1,
+      "TIMEOUT": 0,
       "UNKNOWN": 0
     },
     "total": 7,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.654,
+      "elapsed_sec": 2.402,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.433,
+      "elapsed_sec": 1.41,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -44,18 +44,18 @@
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": null,
-      "elapsed_sec": 20.971,
-      "state": "TIMEOUT",
-      "error_type": "timeout",
-      "error": "Request timed out after 20 seconds."
+      "status_code": 200,
+      "elapsed_sec": 1.147,
+      "state": "OK",
+      "error_type": null,
+      "error": null
     },
     {
       "name": "情報学広場",
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.047,
+      "elapsed_sec": 2.14,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -65,7 +65,7 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.862,
+      "elapsed_sec": 0.793,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.868,
+      "elapsed_sec": 1.684,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.272,
+      "elapsed_sec": 1.1,
       "state": "OK",
       "error_type": null,
       "error": null
