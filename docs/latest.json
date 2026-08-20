@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-08-20T23:52:57+09:00",
+  "checked_at": "2026-08-21T00:07:58+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -10,9 +10,9 @@
     "message": "一部サイトで応答遅延または異常を確認しました。",
     "counts": {
       "OK": 6,
-      "SLOW": 0,
+      "SLOW": 1,
       "VERY_SLOW": 0,
-      "SERVER_ERROR": 1,
+      "SERVER_ERROR": 0,
       "TIMEOUT": 0,
       "UNKNOWN": 0
     },
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.005,
+      "elapsed_sec": 1.811,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.388,
+      "elapsed_sec": 1.083,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.592,
+      "elapsed_sec": 1.043,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -55,7 +55,7 @@
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.192,
+      "elapsed_sec": 2.559,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -64,18 +64,18 @@
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/",
       "primary": false,
-      "status_code": 502,
-      "elapsed_sec": 7.054,
-      "state": "SERVER_ERROR",
+      "status_code": 200,
+      "elapsed_sec": 8.814,
+      "state": "SLOW",
       "error_type": null,
-      "error": "HTTP 502: Bad Gateway"
+      "error": null
     },
     {
       "name": "IRDB(参考)",
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.622,
+      "elapsed_sec": 0.567,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.019,
+      "elapsed_sec": 0.586,
       "state": "OK",
       "error_type": null,
       "error": null
