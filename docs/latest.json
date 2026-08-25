@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-08-25T23:22:21+09:00",
+  "checked_at": "2026-08-25T23:37:20+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -10,10 +10,10 @@
     "message": "複数サイトでサーバーエラーまたはタイムアウトを確認しました。広域的事象の可能性があります。",
     "counts": {
       "OK": 3,
-      "SLOW": 0,
+      "SLOW": 1,
       "VERY_SLOW": 0,
-      "SERVER_ERROR": 1,
-      "TIMEOUT": 3,
+      "SERVER_ERROR": 2,
+      "TIMEOUT": 1,
       "UNKNOWN": 0
     },
     "total": 7,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": null,
-      "elapsed_sec": 20.755,
+      "elapsed_sec": 20.766,
       "state": "TIMEOUT",
       "error_type": "timeout",
       "error": "Request timed out after 20 seconds."
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.778,
+      "elapsed_sec": 2.068,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 502,
-      "elapsed_sec": 0.681,
+      "elapsed_sec": 0.655,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 502: Bad Gateway"
@@ -54,28 +54,28 @@
       "name": "情報学広場",
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
-      "status_code": null,
-      "elapsed_sec": 20.502,
-      "state": "TIMEOUT",
-      "error_type": "timeout",
-      "error": "Request timed out after 20 seconds."
+      "status_code": 502,
+      "elapsed_sec": 0.854,
+      "state": "SERVER_ERROR",
+      "error_type": null,
+      "error": "HTTP 502: Bad Gateway"
     },
     {
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/",
       "primary": false,
-      "status_code": null,
-      "elapsed_sec": 20.347,
-      "state": "TIMEOUT",
-      "error_type": "timeout",
-      "error": "Request timed out after 20 seconds."
+      "status_code": 200,
+      "elapsed_sec": 14.822,
+      "state": "SLOW",
+      "error_type": null,
+      "error": null
     },
     {
       "name": "IRDB(参考)",
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.218,
+      "elapsed_sec": 1.942,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.294,
+      "elapsed_sec": 0.854,
       "state": "OK",
       "error_type": null,
       "error": null
