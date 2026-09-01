@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-01T19:22:56+09:00",
+  "checked_at": "2026-09-01T19:38:00+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -9,11 +9,11 @@
     "level": "SLOW",
     "message": "一部サイトで応答遅延または異常を確認しました。",
     "counts": {
-      "OK": 4,
-      "SLOW": 2,
+      "OK": 5,
+      "SLOW": 1,
       "VERY_SLOW": 0,
-      "SERVER_ERROR": 0,
-      "TIMEOUT": 1,
+      "SERVER_ERROR": 1,
+      "TIMEOUT": 0,
       "UNKNOWN": 0
     },
     "total": 7,
@@ -25,8 +25,8 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 6.927,
-      "state": "SLOW",
+      "elapsed_sec": 3.016,
+      "state": "OK",
       "error_type": null,
       "error": null
     },
@@ -35,8 +35,8 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 6.175,
-      "state": "SLOW",
+      "elapsed_sec": 1.686,
+      "state": "OK",
       "error_type": null,
       "error": null
     },
@@ -44,19 +44,19 @@
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": null,
-      "elapsed_sec": 20.524,
-      "state": "TIMEOUT",
-      "error_type": "timeout",
-      "error": "Request timed out after 20 seconds."
+      "status_code": 502,
+      "elapsed_sec": 0.672,
+      "state": "SERVER_ERROR",
+      "error_type": null,
+      "error": "HTTP 502: Bad Gateway"
     },
     {
       "name": "情報学広場",
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.602,
-      "state": "OK",
+      "elapsed_sec": 5.038,
+      "state": "SLOW",
       "error_type": null,
       "error": null
     },
@@ -65,7 +65,7 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.005,
+      "elapsed_sec": 1.209,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.554,
+      "elapsed_sec": 1.632,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.486,
+      "elapsed_sec": 1.305,
       "state": "OK",
       "error_type": null,
       "error": null
