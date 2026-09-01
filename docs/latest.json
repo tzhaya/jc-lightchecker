@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-01T14:37:56+09:00",
+  "checked_at": "2026-09-01T14:52:56+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -10,9 +10,9 @@
     "message": "一部サイトで応答遅延または異常を確認しました。",
     "counts": {
       "OK": 6,
-      "SLOW": 1,
+      "SLOW": 0,
       "VERY_SLOW": 0,
-      "SERVER_ERROR": 0,
+      "SERVER_ERROR": 1,
       "TIMEOUT": 0,
       "UNKNOWN": 0
     },
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.773,
+      "elapsed_sec": 2.317,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.673,
+      "elapsed_sec": 1.324,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -44,18 +44,18 @@
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 10.189,
-      "state": "SLOW",
+      "status_code": 502,
+      "elapsed_sec": 0.588,
+      "state": "SERVER_ERROR",
       "error_type": null,
-      "error": null
+      "error": "HTTP 502: Bad Gateway"
     },
     {
       "name": "情報学広場",
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.944,
+      "elapsed_sec": 3.034,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -65,7 +65,7 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.152,
+      "elapsed_sec": 0.971,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.251,
+      "elapsed_sec": 1.264,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.65,
+      "elapsed_sec": 1.231,
       "state": "OK",
       "error_type": null,
       "error": null
