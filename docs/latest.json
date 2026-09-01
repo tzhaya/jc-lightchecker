@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-01T17:52:57+09:00",
+  "checked_at": "2026-09-01T18:08:02+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -9,12 +9,12 @@
     "level": "SERVER_ERROR",
     "message": "複数サイトでサーバーエラーまたはタイムアウトを確認しました。広域的事象の可能性があります。",
     "counts": {
-      "OK": 3,
+      "OK": 2,
       "SLOW": 1,
       "VERY_SLOW": 1,
-      "SERVER_ERROR": 0,
-      "TIMEOUT": 2,
-      "UNKNOWN": 0
+      "SERVER_ERROR": 1,
+      "TIMEOUT": 1,
+      "UNKNOWN": 1
     },
     "total": 7,
     "primary_state": null
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 16.762,
+      "elapsed_sec": 15.367,
       "state": "VERY_SLOW",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 12.654,
+      "elapsed_sec": 14.259,
       "state": "SLOW",
       "error_type": null,
       "error": null
@@ -44,18 +44,18 @@
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": null,
-      "elapsed_sec": 20.833,
-      "state": "TIMEOUT",
-      "error_type": "timeout",
-      "error": "Request timed out after 20 seconds."
+      "status_code": 502,
+      "elapsed_sec": 0.34,
+      "state": "SERVER_ERROR",
+      "error_type": null,
+      "error": "HTTP 502: Bad Gateway"
     },
     {
       "name": "情報学広場",
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": null,
-      "elapsed_sec": 20.852,
+      "elapsed_sec": 20.789,
       "state": "TIMEOUT",
       "error_type": "timeout",
       "error": "Request timed out after 20 seconds."
@@ -64,18 +64,18 @@
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 1.298,
-      "state": "OK",
+      "status_code": 403,
+      "elapsed_sec": 0.678,
+      "state": "UNKNOWN",
       "error_type": null,
-      "error": null
+      "error": "HTTP 403: Forbidden"
     },
     {
       "name": "IRDB(参考)",
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.774,
+      "elapsed_sec": 0.893,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.533,
+      "elapsed_sec": 1.262,
       "state": "OK",
       "error_type": null,
       "error": null
