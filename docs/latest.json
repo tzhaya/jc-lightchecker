@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-09-04T14:07:12+09:00",
+  "checked_at": "2026-09-04T14:22:13+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "OK",
-    "message": "大きな異常は確認されていません。",
+    "level": "SERVER_ERROR",
+    "message": "複数サイトでサーバーエラーまたはタイムアウトを確認しました。広域的事象の可能性があります。",
     "counts": {
-      "OK": 7,
+      "OK": 3,
       "SLOW": 0,
       "VERY_SLOW": 0,
-      "SERVER_ERROR": 0,
+      "SERVER_ERROR": 4,
       "TIMEOUT": 0,
       "UNKNOWN": 0
     },
@@ -24,48 +24,48 @@
       "name": "国際農研機関リポジトリ",
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 2.035,
-      "state": "OK",
+      "status_code": 503,
+      "elapsed_sec": 0.749,
+      "state": "SERVER_ERROR",
       "error_type": null,
-      "error": null
+      "error": "HTTP 503: Service Temporarily Unavailable"
     },
     {
       "name": "農研機構機関リポジトリ",
       "url": "https://repository.naro.go.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 1.492,
-      "state": "OK",
+      "status_code": 503,
+      "elapsed_sec": 0.813,
+      "state": "SERVER_ERROR",
       "error_type": null,
-      "error": null
+      "error": "HTTP 503: Service Temporarily Unavailable"
     },
     {
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 1.351,
-      "state": "OK",
+      "status_code": 503,
+      "elapsed_sec": 0.713,
+      "state": "SERVER_ERROR",
       "error_type": null,
-      "error": null
+      "error": "HTTP 503: Service Temporarily Unavailable"
     },
     {
       "name": "情報学広場",
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 2.82,
-      "state": "OK",
+      "status_code": 503,
+      "elapsed_sec": 1.65,
+      "state": "SERVER_ERROR",
       "error_type": null,
-      "error": null
+      "error": "HTTP 503: Service Temporarily Unavailable"
     },
     {
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.575,
+      "elapsed_sec": 1.385,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.692,
+      "elapsed_sec": 1.779,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.022,
+      "elapsed_sec": 1.11,
       "state": "OK",
       "error_type": null,
       "error": null
