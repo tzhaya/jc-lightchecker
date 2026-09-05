@@ -1,20 +1,20 @@
 {
-  "checked_at": "2026-09-06T08:37:13+09:00",
+  "checked_at": "2026-09-06T08:52:12+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
     "timeout_sec": 20
   },
   "summary": {
-    "level": "VERY_SLOW",
-    "message": "複数サイトで応答遅延または異常を確認しました。広域的遅延の可能性があります。",
+    "level": "OK",
+    "message": "大きな異常は確認されていません。",
     "counts": {
-      "OK": 3,
+      "OK": 7,
       "SLOW": 0,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 0,
       "TIMEOUT": 0,
-      "UNKNOWN": 4
+      "UNKNOWN": 0
     },
     "total": 7,
     "primary_state": null
@@ -24,48 +24,48 @@
       "name": "国際農研機関リポジトリ",
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": 400,
-      "elapsed_sec": 1.356,
-      "state": "UNKNOWN",
+      "status_code": 200,
+      "elapsed_sec": 2.022,
+      "state": "OK",
       "error_type": null,
-      "error": "HTTP 400: Bad Request"
+      "error": null
     },
     {
       "name": "農研機構機関リポジトリ",
       "url": "https://repository.naro.go.jp/",
       "primary": false,
-      "status_code": 400,
-      "elapsed_sec": 0.888,
-      "state": "UNKNOWN",
+      "status_code": 200,
+      "elapsed_sec": 1.309,
+      "state": "OK",
       "error_type": null,
-      "error": "HTTP 400: Bad Request"
+      "error": null
     },
     {
       "name": "つくばリポジトリ",
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
-      "status_code": 400,
-      "elapsed_sec": 0.817,
-      "state": "UNKNOWN",
+      "status_code": 200,
+      "elapsed_sec": 1.418,
+      "state": "OK",
       "error_type": null,
-      "error": "HTTP 400: Bad Request"
+      "error": null
     },
     {
       "name": "情報学広場",
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
-      "status_code": 400,
-      "elapsed_sec": 0.623,
-      "state": "UNKNOWN",
+      "status_code": 200,
+      "elapsed_sec": 1.743,
+      "state": "OK",
       "error_type": null,
-      "error": "HTTP 400: Bad Request"
+      "error": null
     },
     {
       "name": "ResearchMap(参考)",
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.312,
+      "elapsed_sec": 1.274,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.579,
+      "elapsed_sec": 1.801,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.055,
+      "elapsed_sec": 1.368,
       "state": "OK",
       "error_type": null,
       "error": null
