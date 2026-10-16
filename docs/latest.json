@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T16:22:19+09:00",
+  "checked_at": "2026-10-16T16:37:19+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 0.843,
+      "elapsed_sec": 0.767,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Temporarily Unavailable"
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 0.654,
+      "elapsed_sec": 0.62,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Temporarily Unavailable"
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 0.704,
+      "elapsed_sec": 0.809,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Temporarily Unavailable"
@@ -55,7 +55,7 @@
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 0.659,
+      "elapsed_sec": 0.577,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Temporarily Unavailable"
@@ -65,7 +65,7 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.203,
+      "elapsed_sec": 2.413,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.595,
+      "elapsed_sec": 1.247,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.276,
+      "elapsed_sec": 1.057,
       "state": "OK",
       "error_type": null,
       "error": null
