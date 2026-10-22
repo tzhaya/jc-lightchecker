@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-22T15:07:11+09:00",
+  "checked_at": "2026-10-22T15:22:10+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -9,8 +9,8 @@
     "level": "SLOW",
     "message": "一部サイトで応答遅延または異常を確認しました。",
     "counts": {
-      "OK": 6,
-      "SLOW": 0,
+      "OK": 5,
+      "SLOW": 1,
       "VERY_SLOW": 0,
       "SERVER_ERROR": 1,
       "TIMEOUT": 0,
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 2.594,
+      "elapsed_sec": 2.581,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.189,
+      "elapsed_sec": 1.636,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -45,8 +45,8 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.518,
-      "state": "OK",
+      "elapsed_sec": 8.096,
+      "state": "SLOW",
       "error_type": null,
       "error": null
     },
@@ -55,7 +55,7 @@
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.967,
+      "elapsed_sec": 3.821,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -65,7 +65,7 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 0.536,
+      "elapsed_sec": 0.574,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Unavailable"
@@ -75,7 +75,7 @@
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.208,
+      "elapsed_sec": 1.021,
       "state": "OK",
       "error_type": null,
       "error": null
@@ -85,7 +85,7 @@
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 1.044,
+      "elapsed_sec": 0.983,
       "state": "OK",
       "error_type": null,
       "error": null
