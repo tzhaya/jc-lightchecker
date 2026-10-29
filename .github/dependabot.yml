@@ -4,6 +4,10 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+    # 公開直後の更新を避ける（供給網攻撃で悪意ある版が差し込まれても、検知される猶予を持たせる）。
+    # セキュリティ更新には適用されない。
+    cooldown:
+      default-days: 7
     groups:
       codeql-action:
         patterns:
@@ -13,3 +17,14 @@ updates:
     directory: "/cloudflare-worker"
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      # wrangler / vitest などの patch・minor を 1 本の PR にまとめる。
+      # major は個別 PR になり、自動マージの対象外（人が確認する）。
+      worker-dev-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
