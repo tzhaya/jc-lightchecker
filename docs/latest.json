@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T19:07:11+09:00",
+  "checked_at": "2026-10-29T19:22:12+09:00",
   "thresholds": {
     "slow_sec": 5,
     "very_slow_sec": 15,
@@ -9,10 +9,10 @@
     "level": "SERVER_ERROR",
     "message": "複数サイトでサーバーエラーまたはタイムアウトを確認しました。広域的事象の可能性があります。",
     "counts": {
-      "OK": 2,
+      "OK": 1,
       "SLOW": 0,
       "VERY_SLOW": 0,
-      "SERVER_ERROR": 4,
+      "SERVER_ERROR": 5,
       "TIMEOUT": 0,
       "UNKNOWN": 1
     },
@@ -25,7 +25,7 @@
       "url": "https://jircas.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 1.273,
+      "elapsed_sec": 0.685,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Temporarily Unavailable"
@@ -35,7 +35,7 @@
       "url": "https://repository.naro.go.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 0.835,
+      "elapsed_sec": 0.727,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Temporarily Unavailable"
@@ -45,7 +45,7 @@
       "url": "https://tsukuba.repo.nii.ac.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 0.592,
+      "elapsed_sec": 0.7,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Temporarily Unavailable"
@@ -55,7 +55,7 @@
       "url": "https://ipsj.ixsq.nii.ac.jp/",
       "primary": false,
       "status_code": 503,
-      "elapsed_sec": 0.564,
+      "elapsed_sec": 0.669,
       "state": "SERVER_ERROR",
       "error_type": null,
       "error": "HTTP 503: Service Temporarily Unavailable"
@@ -65,7 +65,7 @@
       "url": "https://researchmap.jp/",
       "primary": false,
       "status_code": 403,
-      "elapsed_sec": 0.651,
+      "elapsed_sec": 0.798,
       "state": "UNKNOWN",
       "error_type": null,
       "error": "HTTP 403: Forbidden"
@@ -74,18 +74,18 @@
       "name": "IRDB(参考)",
       "url": "https://irdb.nii.ac.jp/",
       "primary": false,
-      "status_code": 200,
-      "elapsed_sec": 1.135,
-      "state": "OK",
+      "status_code": 503,
+      "elapsed_sec": 1.613,
+      "state": "SERVER_ERROR",
       "error_type": null,
-      "error": null
+      "error": "HTTP 503: Service Unavailable"
     },
     {
       "name": "AgriKnowledge(参考)",
       "url": "https://agriknowledge.affrc.go.jp/",
       "primary": false,
       "status_code": 200,
-      "elapsed_sec": 0.551,
+      "elapsed_sec": 1.349,
       "state": "OK",
       "error_type": null,
       "error": null
