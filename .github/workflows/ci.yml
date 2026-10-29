@@ -52,3 +52,40 @@ jobs:
       - name: Validate Worker configuration
         working-directory: cloudflare-worker
         run: npx wrangler deploy --dry-run
+
+  # Dependabot の patch / minor 更新だけを、上の test ジョブが成功した後に自動マージする。
+  # マージ可否をこのジョブ自身が CI 結果に結びつけているため、ブランチ保護や
+  # "Allow auto-merge" の設定に依存しない。major や判定できない更新は何もせず、人が確認する。
+  # Worker のデプロイは手動のままで、ここでのマージは本番の Worker を更新しない。
+  automerge:
+    name: Auto-merge Dependabot updates
+    needs: test
+    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge when every update is patch or minor
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          UPDATES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        run: |
+          if echo "$UPDATES" | jq -e '
+            length > 0 and
+            all(.[]; .updateType == "version-update:semver-patch"
+                  or .updateType == "version-update:semver-minor")
+          ' > /dev/null; then
+            gh pr merge --squash --delete-branch "$PR_URL"
+          else
+            echo "Not auto-merging (major update or unknown update type): leaving for manual review."
+          fi
