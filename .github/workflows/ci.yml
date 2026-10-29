@@ -78,6 +78,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
+          # テストが通ったリビジョンに限ってマージする（実行中に PR が更新された場合は中止）。
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           UPDATES: ${{ steps.metadata.outputs.updated-dependencies-json }}
         run: |
           if echo "$UPDATES" | jq -e '
@@ -85,7 +87,7 @@ jobs:
             all(.[]; .updateType == "version-update:semver-patch"
                   or .updateType == "version-update:semver-minor")
           ' > /dev/null; then
-            gh pr merge --squash --delete-branch "$PR_URL"
+            gh pr merge --squash --delete-branch --match-head-commit "$HEAD_SHA" "$PR_URL"
           else
             echo "Not auto-merging (major update or unknown update type): leaving for manual review."
           fi
